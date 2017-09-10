@@ -66,12 +66,13 @@ static int cmd_info(char *args){
 		case 'r':
 			for (i = R_EAX; i < R_EDI; i++)
 				printf("%s\t0x%08x\t%10d\n", regsl[i], reg_l(i), reg_l(i));
-				break;
+			printf("%s\t0x%08x\t%10d\n", "eip", cpu.eip, cpu.eip);
+			break;
 		case 'w':
-				printf("Something about watchpoint...\n");
-				break;
+			printf("Something about watchpoint...\n");
+			break;
 		default:
-				puts("Argument Error: Argument should be r or w!");
+			puts("Argument Error: Argument should be r or w!");
 	}
 	return 0;
 }
