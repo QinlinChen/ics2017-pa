@@ -69,6 +69,7 @@ static int cmd_info(char *args){
 			printf("%s\t0x%08x\t%10d\n", "eip", cpu.eip, cpu.eip);
 			break;
 		case 'w':
+			/*TO DO*/
 			printf("Something about watchpoint...\n");
 			break;
 		default:
