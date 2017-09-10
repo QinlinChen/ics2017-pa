@@ -65,7 +65,7 @@ static int cmd_info(char *args){
 	switch (arg[0]) {
 		case 'r':
 			for (i = R_EAX; i < R_EDI; i++)
-				printf("%s %x %d\n", regsl[i], reg_l(i), reg_l(i));
+				printf("%s\t0x%x\t%d\n", regsl[i], reg_l(i), reg_l(i));
 			break;
 		case 'w':
 			printf("Something about watchpoint...\n");
