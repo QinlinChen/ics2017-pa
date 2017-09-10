@@ -42,11 +42,11 @@ void exec_wrapper(bool);
 
 static int cmd_si(char *args) {
 	char *arg = strtok(NULL, " ");
-  int N = 0;
+	int N = 0;
 	if (!arg)
 		N = 1;				//if arg is NULL, execute 1 instruction
 	else if ((N = atoi(arg)) == 0)
-		puts("Argument Error: Argument should be a number!");
+		fprintf(stderr, "Argument Error: Argument should be a number!");
 
 	int i;
 	for (i = 0; i < N; ++i)
@@ -57,7 +57,7 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
-		puts("Argument Error: There should be an argument!");
+		fprintf(stderr, "Argument Error: There should be an argument!");
 		return 0;
 	}
 	
@@ -73,7 +73,7 @@ static int cmd_info(char *args) {
 			printf("Something about watchpoint...\n");
 			break;
 		default:
-			puts("Argument Error: Argument should be r or w!");
+			fprintf(stderr, "Argument Error: Argument should be r or w!");
 	}
 	return 0;
 }
@@ -81,7 +81,7 @@ static int cmd_info(char *args) {
 static int cmd_p(char *args) {
 	char *expr = strtok(NULL, " ");
 	if (!expr) {
-		puts("Argument Error: There should be an argument!");
+		fprintf(stderr, "Argument Error: There should be an argument!");
 		return 0;
 	}
 	
@@ -93,7 +93,7 @@ static int cmd_p(char *args) {
 static int cmd_x(char *args) {
 	int N, expr;
 	if (sscanf(args, "%d %x", &N, &expr) != 2) {
-		puts("Argument Error: Arguments should be N and EXPR");
+		fprintf(stderr, "Argument Error: Arguments should be N and EXPR");
 		return 0;
 	}			
 	
@@ -114,7 +114,7 @@ static int cmd_x(char *args) {
 static int cmd_w(char *args) {
 	char *expr = strtok(NULL, " ");
 	if (!expr) {
-		puts("Argument Error: There should be an argument!");
+		fprintf(stderr, "Argument Error: There should be an argument!");
 		return 0;
 	}
 
@@ -126,7 +126,7 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
-		puts("Argument Error: There should be an argument!");
+		fprintf(stderr, "Argument Error: There should be an argument!");
 		return 0;
 	}
 	// int N = atoi(arg);
