@@ -38,6 +38,22 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+void exec_wrapper(bool);
+
+static int cmd_si(char *args){
+	char *arg = strtok(NULL, " ");
+  int N = 0;
+	if (!arg)
+		N = 1;				//if arg is NULL, execute 1 instruction
+	else if ((N = atoi(arg)) == 0)
+		puts("Argument Error: Argument should be a number");
+
+	int i;
+	for (i = 0; i < N; ++i)
+			exec_wrapper(true);			//print infomation
+	return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -46,7 +62,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+	{ "si", "Execute N instructions by step where N is 1 by default", cmd_si }
   /* TODO: Add more commands */
 
 };
