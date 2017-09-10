@@ -69,7 +69,7 @@ static int cmd_info(char *args) {
 			printf("%s\t0x%08x\t%10d\n", "eip", cpu.eip, cpu.eip);
 			break;
 		case 'w':
-			/*TO DO*/
+			/*-------------TO REALIZE---------------*/
 			printf("Something about watchpoint...\n");
 			break;
 		default:
@@ -79,13 +79,43 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_p(char *args) {
+	char *expr = strtok(NULL, " ");
+	if (!expr) {
+		puts("Argument Error: There should be an argument!");
+		return 0;
+	}
+	
+	/*------------TO REALIZE--------------*/
+	puts("Here is the value of the expression.");
+	return 0;	
+}
+
+static int cmd_x(char *args) {
+	return 0;
+}
+
+static int cmd_w(char *args) {
+	char *expr = strtok(NULL, " ");
+	if (!expr) {
+		puts("Argument Error: There should be an argument!");
+		return 0;
+	}
+
+	/*------------TO REALIZE--------------*/
+	puts("Seting Watchpoint has not been realized.");
+	return 0;	
+}
+
+static int cmd_d(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
 		puts("Argument Error: There should be an argument!");
 		return 0;
 	}
-	
-	puts("Here is the value of the expression.");
+	// int N = atoi(arg);
+
+	/*------------TO REALIZE--------------*/
+	puts("Deleting Watchpoint has not been realized.");
 	return 0;	
 }
 
@@ -99,8 +129,10 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute N instructions by step where N is 1 by default", cmd_si },
 	{ "info", "Print some infomation about regs or watchpoiters", cmd_info },
-	{ "p", "Print the value of an expreesion", cmd_p }
-	/* TODO: Add more commands */
+	{ "p", "Print the value of an expreesion", cmd_p },
+	{ "x", "Examine the memory", cmd_x },
+	{ "w", "Set a watchpoint", cmd_w },
+	{ "d", "Delete a watchpoint", cmd_d }
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
