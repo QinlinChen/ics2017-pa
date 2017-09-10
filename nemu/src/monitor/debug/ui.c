@@ -40,7 +40,7 @@ static int cmd_help(char *args);
 
 void exec_wrapper(bool);
 
-static int cmd_si(char *args){
+static int cmd_si(char *args) {
 	char *arg = strtok(NULL, " ");
   int N = 0;
 	if (!arg)
@@ -54,7 +54,7 @@ static int cmd_si(char *args){
 	return 0;
 }
 
-static int cmd_info(char *args){
+static int cmd_info(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
 		puts("Argument Error: There should be an argument!");
@@ -78,6 +78,17 @@ static int cmd_info(char *args){
 	return 0;
 }
 
+static int cmd_p(char *args) {
+	char *arg = strtok(NULL, " ");
+	if (!arg) {
+		puts("Argument Error: There should be an argument!");
+		return 0;
+	}
+	
+	puts("Here is the value of the expression.");
+	return 0;	
+}
+
 static struct {
   char *name;
   char *description;
@@ -87,8 +98,9 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute N instructions by step where N is 1 by default", cmd_si },
-	{ "info", "Print some infomation about regs or watchpoiters", cmd_info }
-  /* TODO: Add more commands */
+	{ "info", "Print some infomation about regs or watchpoiters", cmd_info },
+	{ "p", "Print the value of an expreesion", cmd_p }
+	/* TODO: Add more commands */
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
