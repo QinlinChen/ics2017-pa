@@ -46,11 +46,34 @@ static int cmd_si(char *args){
 	if (!arg)
 		N = 1;				//if arg is NULL, execute 1 instruction
 	else if ((N = atoi(arg)) == 0)
-		puts("Argument Error: Argument should be a number");
+		puts("Argument Error: Argument should be a number!");
 
 	int i;
 	for (i = 0; i < N; ++i)
 			exec_wrapper(true);			//print infomation
+	return 0;
+}
+
+static int cmd_info(char *args){
+	char *arg = strtok(NULL, " ");
+	if (!arg) {
+		puts("Argument Error: There should be an argument!");
+		return 0;
+	}
+	
+	int i;	
+	switch (arg[0]) {
+		case 'r':
+			for (i = R_EAX; i < R_EDI; i++)
+				printf("%s %x %d\n", regsl[i], reg_l(i), reg_l(i));
+			break;
+		case 'w':
+			printf("Something about watchpoint...\n");
+			break;
+		default:
+			puts("Argument Error: Argument should be r or w!");
+			break;
+	}
 	return 0;
 }
 
@@ -62,9 +85,9 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-	{ "si", "Execute N instructions by step where N is 1 by default", cmd_si }
+	{ "si", "Execute N instructions by step where N is 1 by default", cmd_si },
+	{ "info", "Print some infomation about regs or watchpoiters", cmd_info }
   /* TODO: Add more commands */
-
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
