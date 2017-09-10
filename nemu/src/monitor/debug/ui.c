@@ -91,6 +91,22 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_x(char *args) {
+	int N, expr;
+	if (sscanf(args, "%d %x", &N, &expr) != 2) {
+		puts("Argument Error: Arguments should be N and EXPR");
+		return 0;
+	}			
+	
+	int i;
+	const int bytes_per_unit = 4;
+	for (i = 0; i < N; ++i) {
+		int j;
+		for (j = 0; j < bytes_per_unit; ++j)
+			printf("0x%02x", pmem[expr + j]);
+		putchar(' ');
+		expr += bytes_per_unit;
+	}
+	putchar('\n');
 	return 0;
 }
 
@@ -102,7 +118,7 @@ static int cmd_w(char *args) {
 	}
 
 	/*------------TO REALIZE--------------*/
-	puts("Seting Watchpoint has not been realized.");
+	puts("Setting Watchpoint has not been realized.");
 	return 0;	
 }
 
