@@ -101,8 +101,9 @@ static int cmd_x(char *args) {
 	const int bytes_per_unit = 4;
 	for (i = 0; i < N; ++i) {
 		int j;
+		printf("0x");
 		for (j = 0; j < bytes_per_unit; ++j)
-			printf("0x%02x", pmem[expr + j]);
+			printf("%02x", pmem[expr + j]);
 		putchar(' ');
 		expr += bytes_per_unit;
 	}
