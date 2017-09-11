@@ -96,18 +96,18 @@ static int cmd_x(char *args) {
 		fprintf(stderr, "Argument Error: Arguments should be N and EXPR\n");
 		return 0;
 	}			
-	
-	int i;
+
+	int i, j, index = expr;
 	const int bytes_per_unit = 4;
 	for (i = 0; i < N; ++i) {
-		int j;
 		printf("0x");
 		for (j = 0; j < bytes_per_unit; ++j)
-			printf("%02x", pmem[expr + j]);
-		putchar(' ');
-		expr += bytes_per_unit;
+			printf("%02x", pmem[index + j]);
+		putchar(((i % 4 == 3) ? '\n': '\t'));
+		index += bytes_per_unit;
 	}
-	putchar('\n');
+	if (i % 4 != 3)
+		putchar('\n');
 	return 0;
 }
 
