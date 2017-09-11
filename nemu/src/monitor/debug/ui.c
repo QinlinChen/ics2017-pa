@@ -106,7 +106,7 @@ static int cmd_x(char *args) {
 		putchar(((i % 4 == 3) ? '\n': '\t'));
 		index += bytes_per_unit;
 	}
-	if (i % 4 == 0)
+	if (i % 4)
 		putchar('\n');
 	return 0;
 }
