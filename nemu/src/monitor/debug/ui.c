@@ -46,7 +46,7 @@ static int cmd_si(char *args) {
 	if (!arg)
 		N = 1;				//if arg is NULL, execute 1 instruction
 	else if ((N = atoi(arg)) == 0)
-		print_error("Argument Error: Argument should be a number!\n");
+		print_error("Argument Error: Argument should be a number!");
 
 	int i;
 	for (i = 0; i < N; ++i)
@@ -57,7 +57,7 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
-		print_error("Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!");
 		return 0;
 	}
 	
@@ -73,7 +73,7 @@ static int cmd_info(char *args) {
 			printf("Something about watchpoint...\n");
 			break;
 		default:
-			print_error("Argument Error: Argument should be r or w!\n");
+			print_error("Argument Error: Argument should be r or w!");
 	}
 	return 0;
 }
@@ -81,7 +81,7 @@ static int cmd_info(char *args) {
 static int cmd_p(char *args) {
 	char *expression = args; 
 	if (!expression) {
-		print_error("Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!");
 		return 0;
 	}
 	
@@ -89,7 +89,7 @@ static int cmd_p(char *args) {
 	bool success;
 	int val = expr(expression, &success);
 	if (!success){
-		print_error("Error: Fail to make token!\n");
+		print_error("Error: Fail to make token!");
 		return 0;
 	}
 	printf("%s = %d\n", expression, val);	
@@ -99,11 +99,11 @@ static int cmd_p(char *args) {
 static int cmd_x(char *args) {
 	int N, expr;
 	if (!args){
-		print_error("Argument Error: There should be at least two arguments!\n");
+		print_error("Argument Error: There should be at least two arguments!");
 		return 0;
 	}
 	if (sscanf(args, "%d %x", &N, &expr) != 2) {
-		print_error("Argument Error: Arguments should be N and EXPR\n");
+		print_error("Argument Error: Arguments should be N and EXPR");
 		return 0;
 	}			
 
@@ -124,7 +124,7 @@ static int cmd_x(char *args) {
 static int cmd_w(char *args) {
 	char *expr = strtok(NULL, " ");
 	if (!expr) {
-		print_error("Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!");
 		return 0;
 	}
 
@@ -136,7 +136,7 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
-		print_error("Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!");
 		return 0;
 	}
 	// int N = atoi(arg);

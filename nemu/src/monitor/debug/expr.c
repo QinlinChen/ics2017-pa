@@ -92,7 +92,7 @@ static bool make_token(char *e) {
           default: 
 						tokens[nr_token].type = rules[i].token_type;
 						if (substr_len >= 32) {
-							print_error("Error: the length of substring is more than 31!\n");
+							print_error("Error: the length of substring is more than 31!");
 							return false;
 						}
 						memcpy(tokens[nr_token].str, substr_start, substr_len);
