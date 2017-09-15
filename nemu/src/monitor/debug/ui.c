@@ -92,6 +92,10 @@ static int cmd_p(char *args) {
 
 static int cmd_x(char *args) {
 	int N, expr;
+	if (!args){
+		fprintf(stderr, "Argument Error: There should be at least two arguments!");
+		return 0;
+	}
 	if (sscanf(args, "%d %x", &N, &expr) != 2) {
 		fprintf(stderr, "Argument Error: Arguments should be N and EXPR\n");
 		return 0;
