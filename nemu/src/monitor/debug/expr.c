@@ -7,7 +7,9 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256,
+ 	TK_EQ, TK_ADD, TK_SUB, TK_MUL, TK_DIV,
+	TK_DINT
 
   /* TODO: Add more token types */
 
@@ -23,8 +25,13 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+	{"\\d+", TK_DINT},		// decimal integer
+  {"\\+", TK_ADD},			// add
+	{"\\-", TK_SUB},			// minus
+	{"\\*", TK_MUL},			// multiply
+	{"/", TK_DIV},				// divide
+	{"==", TK_EQ}         // equal
+	
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -80,7 +87,15 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          default: 
+						tokens[nr_token].type = rules[i].token_type;
+						if (substr_len >= 32) {
+							fprintf(stderr, "Error: the length of substring is more than 31!");
+							return false;
+						}
+						memcpy(tokens[nr_token].str, substr_start, substr_len);
+						tokens[nr_token].str[substr_len] = '\0';
+						nr_token++;	
         }
 
         break;
