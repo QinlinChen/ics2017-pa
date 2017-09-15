@@ -118,7 +118,10 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+	int i;
+	for (i = 0; i < nr_token; ++i) 
+		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
 
+	*success = true;
   return 0;
 }

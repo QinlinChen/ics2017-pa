@@ -79,14 +79,20 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_p(char *args) {
-	char *expr = strtok(NULL, " ");
-	if (!expr) {
+	char *expression = strtok(NULL, " ");
+	if (!expression) {
 		fprintf(stderr, "Argument Error: There should be an argument!\n");
 		return 0;
 	}
 	
 	/*------------TO REALIZE--------------*/
-	puts("Here is the value of the expression.");
+	bool success;
+	int val = expr(expression, &success);
+	if (!success){
+		fprintf(stderr, "Error: Fail to make token!\n");
+		return 0;
+	}
+	printf("%s = %d\n", expression, val);	
 	return 0;	
 }
 
