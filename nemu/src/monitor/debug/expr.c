@@ -87,6 +87,8 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
+					case TK_NOTYPE:
+						break;
           default: 
 						tokens[nr_token].type = rules[i].token_type;
 						if (substr_len >= 32) {

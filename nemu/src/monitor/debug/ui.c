@@ -79,7 +79,7 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_p(char *args) {
-	char *expression = strtok(NULL, " ");
+	char *expression = args; 
 	if (!expression) {
 		fprintf(stderr, "Argument Error: There should be an argument!\n");
 		return 0;
