@@ -9,7 +9,7 @@
 enum {
   TK_NOTYPE = 256,
  	TK_EQ, TK_ADD, TK_SUB, TK_MUL, TK_DIV,
-	TK_DINT
+	TK_DINT, TK_LPAREN, TK_RPAREN
 
   /* TODO: Add more token types */
 
@@ -25,7 +25,9 @@ static struct rule {
    */
 
 	{" +", TK_NOTYPE},    // spaces
-	{"[0-9]+", TK_DINT},		// decimal integer
+	{"\\(", TK_LPAREN},		// left parentheses
+	{"\\)", TK_RPAREN},		// right parentheses
+	{"[0-9]+", TK_DINT},	// decimal integer
 	{"\\+", TK_ADD},			// add
 	{"\\-", TK_SUB},			// minus
 	{"\\*", TK_MUL},			// multiply
@@ -87,17 +89,33 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
+					if (nr_token >= 32) {
+						print_error("Error: nr_token is more than the limitation of 31");
+						return false;
+					}	
+					if (substr_len >= 32) {
+						print_error("Error: the length of substring is more than 31!");
+						return false;
+					}
+
 					case TK_NOTYPE:
 						break;
-          default: 
+
+					case TK_ADD: case TK_SUB: case TK_MUL: case TK_DIV:
+					case TK_LPAREN: case TK_RPAREN:
 						tokens[nr_token].type = rules[i].token_type;
-						if (substr_len >= 32) {
-							print_error("Error: the length of substring is more than 31!");
-							return false;
-						}
+						nr_token++;	
+						break;
+
+					case TK_DINT:
+						tokens[nr_token].type = rules[i].token_type;
 						memcpy(tokens[nr_token].str, substr_start, substr_len);
 						tokens[nr_token].str[substr_len] = '\0';
 						nr_token++;	
+						break;
+
+          default: 
+						break;
         }
 
         break;
@@ -111,6 +129,17 @@ static bool make_token(char *e) {
   }
 
   return true;
+}
+
+bool check_parentheses(int p, int q) {
+	return (tokens[p].type == TK_LPAREN) && (tokens[q].type == TK_RPAREN);
+}
+
+int eval(int p, int q, bool *success) {
+	if (p > q) {
+	return 0;	
+	}	
+	return 1;
 }
 
 uint32_t expr(char *e, bool *success) {
