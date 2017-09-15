@@ -97,16 +97,16 @@ static bool make_token(char *e) {
 						print_error("Error: the length of substring is more than 31!");
 						return false;
 					}
-
+					/* cases that ignored*/
 					case TK_NOTYPE:
 						break;
-
+					/* cases that needn't save the substring*/	
 					case TK_ADD: case TK_SUB: case TK_MUL: case TK_DIV:
 					case TK_LPAREN: case TK_RPAREN:
 						tokens[nr_token].type = rules[i].token_type;
 						nr_token++;	
 						break;
-
+					/* cases that need save the substring*/
 					case TK_DINT:
 						tokens[nr_token].type = rules[i].token_type;
 						memcpy(tokens[nr_token].str, substr_start, substr_len);
@@ -136,9 +136,22 @@ bool check_parentheses(int p, int q) {
 }
 
 int eval(int p, int q, bool *success) {
+	if (!(*success))
+		return 0;
 	if (p > q) {
-	return 0;	
+		print_error("Error: Bad expression where p > q");
+		*success = false;
+		return 0;	
 	}	
+	else if (p == q) {
+		return atoi(tokens[p].str);
+	}	
+	else if (check_parentheses(p, q) == true){
+		return eval(p + 1, q - 1, success);
+	}
+	else {
+	
+	}
 	return 1;
 }
 
