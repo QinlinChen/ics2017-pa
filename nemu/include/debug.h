@@ -44,7 +44,7 @@ extern FILE* log_fp;
 
 #define print_error(format, ...) \
   do { \
-    fprintf(stderr, "\33[0;31m[%s,%d,%s] " format "\33[0m\n", \
+    fprintf(stderr, "\33[1;31m[%s,%d,%s] " format "\33[0m\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__); \
   } while (0)
 

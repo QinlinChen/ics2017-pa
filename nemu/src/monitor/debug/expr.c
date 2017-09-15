@@ -24,9 +24,9 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
 
-  {" +", TK_NOTYPE},    // spaces
+	{" +", TK_NOTYPE},    // spaces
 	{"[0-9]+", TK_DINT},		// decimal integer
-  {"\\+", TK_ADD},			// add
+	{"\\+", TK_ADD},			// add
 	{"\\-", TK_SUB},			// minus
 	{"\\*", TK_MUL},			// multiply
 	{"/", TK_DIV},				// divide
@@ -92,7 +92,7 @@ static bool make_token(char *e) {
           default: 
 						tokens[nr_token].type = rules[i].token_type;
 						if (substr_len >= 32) {
-							fprintf(stderr, "Error: the length of substring is more than 31!\n");
+							print_error("Error: the length of substring is more than 31!\n");
 							return false;
 						}
 						memcpy(tokens[nr_token].str, substr_start, substr_len);

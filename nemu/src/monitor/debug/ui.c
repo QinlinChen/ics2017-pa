@@ -46,7 +46,7 @@ static int cmd_si(char *args) {
 	if (!arg)
 		N = 1;				//if arg is NULL, execute 1 instruction
 	else if ((N = atoi(arg)) == 0)
-		fprintf(stderr, "Argument Error: Argument should be a number!\n");
+		print_error("Argument Error: Argument should be a number!\n");
 
 	int i;
 	for (i = 0; i < N; ++i)
@@ -57,7 +57,7 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
-		fprintf(stderr, "Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!\n");
 		return 0;
 	}
 	
@@ -73,7 +73,7 @@ static int cmd_info(char *args) {
 			printf("Something about watchpoint...\n");
 			break;
 		default:
-			fprintf(stderr, "Argument Error: Argument should be r or w!\n");
+			print_error("Argument Error: Argument should be r or w!\n");
 	}
 	return 0;
 }
@@ -81,7 +81,7 @@ static int cmd_info(char *args) {
 static int cmd_p(char *args) {
 	char *expression = args; 
 	if (!expression) {
-		fprintf(stderr, "Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!\n");
 		return 0;
 	}
 	
@@ -99,11 +99,11 @@ static int cmd_p(char *args) {
 static int cmd_x(char *args) {
 	int N, expr;
 	if (!args){
-		fprintf(stderr, "Argument Error: There should be at least two arguments!\n");
+		print_error("Argument Error: There should be at least two arguments!\n");
 		return 0;
 	}
 	if (sscanf(args, "%d %x", &N, &expr) != 2) {
-		fprintf(stderr, "Argument Error: Arguments should be N and EXPR\n");
+		print_error("Argument Error: Arguments should be N and EXPR\n");
 		return 0;
 	}			
 
@@ -124,7 +124,7 @@ static int cmd_x(char *args) {
 static int cmd_w(char *args) {
 	char *expr = strtok(NULL, " ");
 	if (!expr) {
-		fprintf(stderr, "Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!\n");
 		return 0;
 	}
 
@@ -136,7 +136,7 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (!arg) {
-		fprintf(stderr, "Argument Error: There should be an argument!\n");
+		print_error("Argument Error: There should be an argument!\n");
 		return 0;
 	}
 	// int N = atoi(arg);
