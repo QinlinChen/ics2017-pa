@@ -25,7 +25,7 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-	{"\\d+", TK_DINT},		// decimal integer
+	{"[0-9]+", TK_DINT},		// decimal integer
   {"\\+", TK_ADD},			// add
 	{"\\-", TK_SUB},			// minus
 	{"\\*", TK_MUL},			// multiply
