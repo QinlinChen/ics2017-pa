@@ -306,6 +306,7 @@ static int eval(int p, int q, bool *success) {
 		print_error("Syntex Error: Bad expression!");
 		return -1;	
 	}	
+
 	/* Process DINT, HINT and REG */
 	else if (p == q) {
 		int type = tokens[p].type;
@@ -322,14 +323,17 @@ static int eval(int p, int q, bool *success) {
 		}
 		else if (type == TK_DINT)
 		  return atoi(str);
-		else if (type == TK_REG) {
+		else if (type == TK_REG) 
 			return (int)regname_to_val(str + 1);	
-		}
+		
 		Assert(0, "Neither int nor hex int nor reg!");
 	}	
+
+	/* Throw away the parentheses */
 	else if (check_parentheses(p, q) == true){
 		return eval(p + 1, q - 1, success);
 	}
+
 	/* Process operators */
 	else {
 		int pos = dominant_operator(p, q);
@@ -340,6 +344,7 @@ static int eval(int p, int q, bool *success) {
 		}
 
 		int op = tokens[pos].type;
+		/* Process binary operator */
 		if (is_binary_operator(op)) {
 			int lval = eval(p, pos - 1, success),
 					rval = eval(pos + 1, q, success);
@@ -369,6 +374,8 @@ static int eval(int p, int q, bool *success) {
 					assert(0);
 			}
 		}
+
+		/* Process unary operator */
 		else if (is_unary_operator(op)) {
 			int rval = eval(pos + 1, q, success);
 			if (!(*success)) 
@@ -408,11 +415,7 @@ uint32_t expr(char *e, bool *success) {
 
 	parse_special_token();
 
-	int i;
-	for (i = 0; i < nr_token; ++i) 
-		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
-
 	*success = true;
-	int val = eval(0, nr_token - 1, success);
+	uint32_t val = eval(0, nr_token - 1, success);
   return val; 
 }
