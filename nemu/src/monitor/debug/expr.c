@@ -50,10 +50,10 @@ static struct rule {
 	{"==", TK_EQ},					// equal
 	{"!=", TK_NEQ},					// not equal which is prior to DEREF
 
-	{"<", TK_L},						// less
 	{"<=", TK_LE},					// less and equal
-	{">", TK_G},						// greater
+	{"<", TK_L},						// less
 	{">=", TK_GE},					// greater and equal
+	{">", TK_G},						// greater
 
 	{"\\+", TK_ADD},				// add
 	{"\\-", TK_SUB},				// minus OR negate
