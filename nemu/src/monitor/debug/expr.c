@@ -134,7 +134,7 @@ static bool make_token(char *e) {
 						nr_token++;	
 						break;
 					/* cases that need save the substring */
-					case TK_DINT: case TK_HINT:
+					case TK_DINT: case TK_HINT: case TK_REG:
 						tokens[nr_token].type = rules[i].token_type;
 						memcpy(tokens[nr_token].str, substr_start, substr_len);
 						tokens[nr_token].str[substr_len] = '\0';
