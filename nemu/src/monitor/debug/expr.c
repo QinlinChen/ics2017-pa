@@ -24,7 +24,7 @@ enum {
 	/* operator: priority 5 */
 	TK_MUL, TK_DIV,
 	/* operator: priority 6 */
-	TK_NOT, TK_DEREF
+	TK_NOT, TK_DEREF, TK_NEG
 
 };
 
@@ -42,7 +42,7 @@ static struct rule {
 	{"0x[0-9]+", TK_HINT},	// hexadecimal integer which is prior to DINT
 	{"[0-9]+", TK_DINT},		// decimal integer
 	
-	{"$(e?[a-d][x]|e?[sb][p]|e?[sd][i]|[a-d][hl]|eip)", TK_REG},		//regs
+	{"\\$(e?[a-d][x]|e?[sb][p]|e?[sd][i]|[a-d][hl]|eip)", TK_REG},		//regs
 
 	{"&{2}", TK_AND},				// logic and
 	{"\\|{2}", TK_OR},				// logic or
@@ -56,13 +56,12 @@ static struct rule {
 	{">=", TK_GE},					// greater and equal
 
 	{"\\+", TK_ADD},				// add
-	{"\\-", TK_SUB},				// minus
+	{"\\-", TK_SUB},				// minus OR negate
 
-	{"\\*", TK_MUL},				// multiply
+	{"\\*", TK_MUL},				// multiply OR dereference
 	{"/", TK_DIV},					// divide
 	
-	{"!", TK_NOT},					// logic not
-	{"*", TK_DEREF}					// dereference
+	{"!", TK_NOT}						// logic not
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
