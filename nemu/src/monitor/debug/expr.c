@@ -169,7 +169,8 @@ static int find_corresponding_parenthesis(int p) {
 }
 
 static bool check_parentheses(int p, int q) {
-	return find_corresponding_parenthesis(p) == q;
+	return (tokens[p].type == TK_LPAREN) 
+		&& (find_corresponding_parenthesis(p) == q);
 }
 
 static bool is_operator(int k) {
