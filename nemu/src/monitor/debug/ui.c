@@ -117,7 +117,7 @@ static int cmd_x(char *args) {
 	vaddr_t addr = expr(expression, &success);
 	int i, j;
 	for (i = 0; i < N; ++i) {
-		printf("\t0x%x:\t", addr);
+		printf("  0x%x:    ", addr);
 		uint32_t value = vaddr_read(addr, 4);
 		uint8_t *pbyte = (uint8_t *)&value;
 		for (j = 0; j < 4; ++j)
