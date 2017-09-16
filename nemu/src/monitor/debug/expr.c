@@ -160,18 +160,16 @@ static bool is_operator(int k) {
 }
 
 static int priority(int k) {
-	int ret = -1;
 	switch (tokens[k].type) {
 		case TK_EQ:
-			ret = 1; break;
+			return 1;
 		case TK_ADD: case TK_SUB:
-			ret = 2; break;
+			return 2;
 		case TK_MUL: case TK_DIV:
-			ret = 3; break;
+			return 3;
 		default:
-			ret = -1; break;
+			return -1;
 	}
-	return ret;
 }
 
 static int dominant_operator(int p, int q) {
@@ -201,12 +199,13 @@ static int dominant_operator(int p, int q) {
 	return cur_dominant;
 }
 
-int eval(int p, int q, bool *success) {
+static int eval(int p, int q, bool *success) {
 	if (!(*success))
-		return 0;
+		return -1;
 
 	if (p > q) {
 		*success = false;
+		print_error("Syntex Error: Bad expression!");
 		return -1;	
 	}	
 	else if (p == q) {
@@ -216,9 +215,33 @@ int eval(int p, int q, bool *success) {
 		return eval(p + 1, q - 1, success);
 	}
 	else {
-			
+		int pos = dominant_operator(p, q);
+		if (pos < 0) {
+			*success  = false;
+			print_error("Syntex Error: Fail to find dominant operator!");
+			return -1;
+		}
+
+		int lval = eval(p, pos - 1, success),
+				rval = eval(pos + 1, q, success);
+		if (!(*success)) 
+			return -1;
+		
+		switch (tokens[pos].type) {
+			case TK_ADD: return lval + rval;
+			case TK_SUB: return lval - rval;
+			case TK_MUL: return lval * rval;
+			case TK_DIV:
+				if (rval == 0) {
+					*success = false;
+					print_error("Divisor Error: Divisor is zero!");
+					return -1;
+				} 
+				return lval / rval;
+			default:
+				assert(0);
+		}
 	}
-	return 1;
 }
 
 uint32_t expr(char *e, bool *success) {
@@ -238,8 +261,7 @@ uint32_t expr(char *e, bool *success) {
 	for (i = 0; i < nr_token; ++i) 
 		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
 
-	int dom = dominant_operator(0, nr_token - 1);
-	printf("dominant operator is: tokens[%d]\n", dom);
 	*success = true;
-  return 0;
+	int val = eval(0, nr_token - 1, success);
+  return val; 
 }
