@@ -39,7 +39,7 @@ static struct rule {
 	{"\\(", TK_LPAREN},			// left parentheses
 	{"\\)", TK_RPAREN},			// right parentheses
 	
-	{"0x[0-9]+", TK_HINT},	// hexadecimal integer which is prior to DINT
+	{"0x[0-9a-fA-F]+", TK_HINT},	// hexadecimal integer which is prior to DINT
 	{"[0-9]+", TK_DINT},		// decimal integer
 	
 	{"\\$(e?[a-d][x]|e?[sb][p]|e?[sd][i]|[a-d][hl]|eip)", TK_REG},		//regs
