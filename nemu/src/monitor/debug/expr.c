@@ -9,7 +9,13 @@
 
 enum {
   TK_NOTYPE = 256,
- 	TK_EQ, TK_ADD, TK_SUB, TK_MUL, TK_DIV,
+	/* operator: priority 1 */	
+ 	TK_EQ,
+	/* operator: priority 2 */ 
+	TK_ADD, TK_SUB, 
+	/* operator: priority 3 */
+	TK_MUL, TK_DIV,
+	/* not operator */
 	TK_DINT, TK_LPAREN, TK_RPAREN
 
   /* TODO: Add more token types */
@@ -88,16 +94,15 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
-        switch (rules[i].token_type) {
-					if (nr_token >= 32) {
-						print_error("Error: nr_token is more than the limitation of 31");
-						return false;
-					}	
-					if (substr_len >= 32) {
-						print_error("Error: the length of substring is more than 31!");
-						return false;
-					}
+				if (nr_token >= 32) {
+					print_error("Error: nr_token is more than the limitation of 31");
+					return false;
+				}	
+				if (substr_len >= 32) {
+					print_error("Error: the length of substring is more than 31!");
+					return false;
+				}
+        switch (rules[i].token_type) {	
 					/* cases that ignored*/
 					case TK_NOTYPE:
 						break;
@@ -132,7 +137,7 @@ static bool make_token(char *e) {
   return true;
 }
 
-bool parentheses_are_matched(int p, int q) {
+static bool parentheses_are_matched(int p, int q) {
 	int stack_top = 0, i;
 	for(i = p; i <= q; ++i) 
 		if (tokens[i].type == TK_LPAREN) 
@@ -145,17 +150,64 @@ bool parentheses_are_matched(int p, int q) {
 	return true;
 }
 
-bool check_parentheses(int p, int q) {
+static bool check_parentheses(int p, int q) {
 	return (tokens[p].type == TK_LPAREN) && (tokens[q].type == TK_RPAREN);
+}
+
+static bool is_operator(int k) {
+	int type = tokens[k].type;
+	return (type >= TK_EQ) && (type <= TK_DIV);
+}
+
+static int priority(int k) {
+	int ret = -1;
+	switch (tokens[k].type) {
+		case TK_EQ:
+			ret = 1; break;
+		case TK_ADD: case TK_SUB:
+			ret = 2; break;
+		case TK_MUL: case TK_DIV:
+			ret = 3; break;
+		default:
+			ret = -1; break;
+	}
+	return ret;
+}
+
+static int dominant_operator(int p, int q) {
+	int i, cur_dominant = -1, cur_priority = 1000;
+	for (i = p; i <= q; ++i) {
+		/* If find left parenthesis, then
+		 * jump to the corresponding right parenthesis*/
+		if (tokens[i].type == TK_LPAREN) {
+			int stack_top = 1;
+			while (stack_top) {
+				i++;
+				if (tokens[i].type == TK_LPAREN)
+					stack_top++;
+				else if (tokens[i].type == TK_RPAREN)
+					stack_top--;
+			}
+		} 
+		/* If is operator, compare the priority*/
+		else if (is_operator(i)) {
+			int pri = priority(i);
+			if(pri <= cur_priority) {
+				cur_dominant = i;
+				cur_priority = pri;
+			}
+		}
+	}	
+	return cur_dominant;
 }
 
 int eval(int p, int q, bool *success) {
 	if (!(*success))
 		return 0;
+
 	if (p > q) {
-		print_error("Error: Bad expression where p > q");
 		*success = false;
-		return 0;	
+		return -1;	
 	}	
 	else if (p == q) {
 		return atoi(tokens[p].str);
@@ -164,7 +216,7 @@ int eval(int p, int q, bool *success) {
 		return eval(p + 1, q - 1, success);
 	}
 	else {
-	
+			
 	}
 	return 1;
 }
@@ -186,6 +238,8 @@ uint32_t expr(char *e, bool *success) {
 	for (i = 0; i < nr_token; ++i) 
 		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
 
+	int dom = dominant_operator(0, nr_token - 1);
+	printf("dominant operator is: tokens[%d]\n", dom);
 	*success = true;
   return 0;
 }
