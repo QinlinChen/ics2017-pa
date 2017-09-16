@@ -5,6 +5,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <stdlib.h>
 
 enum {
   TK_NOTYPE = 256,
@@ -131,6 +132,19 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool parentheses_are_matched(int p, int q) {
+	int stack_top = 0, i;
+	for(i = p; i <= q; ++i) 
+		if (tokens[i].type == TK_LPAREN) 
+			stack_top++;
+		else if (tokens[i].type == TK_RPAREN) {
+			if (stack_top == 0)
+				return false;
+			stack_top--;
+		}
+	return true;
+}
+
 bool check_parentheses(int p, int q) {
 	return (tokens[p].type == TK_LPAREN) && (tokens[q].type == TK_RPAREN);
 }
@@ -158,10 +172,16 @@ int eval(int p, int q, bool *success) {
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
+		print_error("Error: Fail to make tokens!");
     return 0;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
+	if (!parentheses_are_matched(0, nr_token - 1)) {
+		*success = false;
+		print_error("Syntex Error: Parentheses are not matched!");
+		return 0;
+	} 
+
 	int i;
 	for (i = 0; i < nr_token; ++i) 
 		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
