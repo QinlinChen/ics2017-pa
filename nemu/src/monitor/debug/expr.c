@@ -164,7 +164,7 @@ static int find_corresponding_parenthesis(int p) {
 				break;	
 		}
 	}
-	Assert(p < nr_token, "Fail to find corresponding parenthesis!");
+	Assert(tokens[p].type == TK_RPAREN, "Fail to find corresponding parenthesis!");
 	return p;
 }
 
