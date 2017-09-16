@@ -94,15 +94,21 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_x(char *args) {
-	char *arg = strtok(NULL, " ");
-	if (!arg){
+	if (!args) {
 		print_error("Argument Error: There should be at least two arguments!");
 		return 0;
 	}
 
-	int N = atoi(arg);
-	char *expression  = args +  strlen(arg) + 1;
-	if (expression - args >= strlen(args)) {
+	char *args_end = args + strlen(args),
+			 *first_arg = strtok(NULL, " ");
+	if (!first_arg){
+		print_error("Argument Error: There should be at least two arguments!");
+		return 0;
+	}
+
+	int N = atoi(first_arg);
+	char *expression = first_arg + strlen(first_arg) + 1;
+	if (expression >= args_end) {
 		print_error("Argument Error: There should be at least two arguments!");
 		return 0;
 	}				
