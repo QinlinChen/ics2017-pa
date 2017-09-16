@@ -297,7 +297,7 @@ static uint32_t regname_to_val(char *name) {
 	}	
 }
 
-int eval(int p, int q, bool *success) {
+static int eval(int p, int q, bool *success) {
 	if (!(*success))
 		return -1;
 
@@ -413,6 +413,6 @@ uint32_t expr(char *e, bool *success) {
 		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
 
 	*success = true;
-	int val = 0; // eval(0, nr_token - 1, success);
+	int val = eval(0, nr_token - 1, success);
   return val; 
 }
