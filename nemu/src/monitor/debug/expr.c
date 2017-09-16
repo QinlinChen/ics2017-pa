@@ -9,16 +9,22 @@
 
 enum {
   TK_NOTYPE = 256,
-	/* operator: priority 1 */	
- 	TK_EQ,
-	/* operator: priority 2 */ 
-	TK_ADD, TK_SUB, 
+	/* interger and registers */
+	TK_DINT, TK_HINT, TK_REG,
+	/* parentheses */
+	TK_LPAREN, TK_RPAREN,
+	/* operator: priority 1 */
+	TK_AND, TK_OR,
+	/* operator: priority 2 */
+	TK_EQ, TK_NEQ,
 	/* operator: priority 3 */
+	TK_L, TK_LE, TK_G, TK_GE,
+	/* operator: priority 4 */ 
+	TK_ADD, TK_SUB, 
+	/* operator: priority 5 */
 	TK_MUL, TK_DIV,
-	/* not operator */
-	TK_DINT, TK_LPAREN, TK_RPAREN
-
-  /* TODO: Add more token types */
+	/* operator: priority 6 */
+	TK_NOT, TK_DEREF
 
 };
 
@@ -27,20 +33,36 @@ static struct rule {
   int token_type;
 } rules[] = {
 
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
+  /* Pay attention to the precedence level of different rules. */
 
-	{" +", TK_NOTYPE},    // spaces
-	{"\\(", TK_LPAREN},		// left parentheses
-	{"\\)", TK_RPAREN},		// right parentheses
-	{"[0-9]+", TK_DINT},	// decimal integer
-	{"\\+", TK_ADD},			// add
-	{"\\-", TK_SUB},			// minus
-	{"\\*", TK_MUL},			// multiply
-	{"/", TK_DIV},				// divide
-	{"==", TK_EQ}         // equal
+	{" +", TK_NOTYPE},			// spaces
+	{"\\(", TK_LPAREN},			// left parentheses
+	{"\\)", TK_RPAREN},			// right parentheses
 	
+	{"0x[0-9]+", TK_HINT},	// hexadecimal integer which is prior to DINT
+	{"[0-9]+", TK_DINT},		// decimal integer
+	
+	{"$(e?[a-d][x]|e?[sb][p]|e?[sd][i]|[a-d][hl]|eip)", TK_REG},		//regs
+
+	{"&{2}", TK_AND},				// logic and
+	{"|{2}", TK_OR},				// logic or
+
+	{"==", TK_EQ},					// equal
+	{"!=", TK_NEQ},					// not equal which is prior to DEREF
+
+	{"<", TK_L},						// less
+	{"<=", TK_LE},					// less and equal
+	{">", TK_G},						// greater
+	{">=", TK_GE},					// greater and equal
+
+	{"\\+", TK_ADD},				// add
+	{"\\-", TK_SUB},				// minus
+
+	{"\\*", TK_MUL},				// multiply
+	{"/", TK_DIV},					// divide
+	
+	{"!", TK_NOT},					// logic not
+	{"*", TK_DEREF}					// dereference
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -103,23 +125,23 @@ static bool make_token(char *e) {
 					return false;
 				}
         switch (rules[i].token_type) {	
-					/* cases that ignored*/
-					case TK_NOTYPE:
-						break;
-					/* cases that needn't save the substring*/	
+					/* cases that needn't save the substring */	
+					case TK_AND: case TK_OR: case TK_EQ: case TK_NEQ:
+					case TK_L: case TK_LE: case TK_G: case TK_GE:
 					case TK_ADD: case TK_SUB: case TK_MUL: case TK_DIV:
-					case TK_LPAREN: case TK_RPAREN:
+					case TK_NOT: case TK_DEREF: case TK_LPAREN: case TK_RPAREN:
 						tokens[nr_token].type = rules[i].token_type;
+						tokens[nr_token].str[0] = '\0';
 						nr_token++;	
 						break;
-					/* cases that need save the substring*/
-					case TK_DINT:
+					/* cases that need save the substring */
+					case TK_DINT: case TK_HINT:
 						tokens[nr_token].type = rules[i].token_type;
 						memcpy(tokens[nr_token].str, substr_start, substr_len);
 						tokens[nr_token].str[substr_len] = '\0';
 						nr_token++;	
 						break;
-
+					/* cases that ignored */
           default: 
 						break;
         }
@@ -210,7 +232,7 @@ static int dominant_operator(int p, int q) {
 	return cur_dominant;
 }
 
-static int eval(int p, int q, bool *success) {
+int eval(int p, int q, bool *success) {
 	if (!(*success))
 		return -1;
 
@@ -273,6 +295,6 @@ uint32_t expr(char *e, bool *success) {
 		printf("tokens[%d]: (%d, %s)\n", i, tokens[i].type, tokens[i].str);
 
 	*success = true;
-	int val = eval(0, nr_token - 1, success);
+	int val = 0; // eval(0, nr_token - 1, success);
   return val; 
 }
