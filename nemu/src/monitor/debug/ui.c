@@ -117,16 +117,14 @@ static int cmd_x(char *args) {
 	vaddr_t addr = expr(expression, &success);
 	int i, j;
 	for (i = 0; i < N; ++i) {
+		printf("\t0x%x:\t", addr);
 		uint32_t value = vaddr_read(addr, 4);
 		uint8_t *pbyte = (uint8_t *)&value;
-		printf("0x");
 		for (j = 0; j < 4; ++j)
-			printf("%02x", pbyte[j]);
-		putchar(((i % 4 == 3) ? '\n': '\t'));
+			printf("%02x ", pbyte[j]);
+		putchar('\n');
 		addr += 4;
 	}
-	if (i % 4)
-		putchar('\n');
 	return 0;
 }
 
