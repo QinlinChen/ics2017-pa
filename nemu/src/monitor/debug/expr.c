@@ -13,6 +13,9 @@ enum {
 	TK_DINT, TK_HINT, TK_REG,
 	/* parentheses */
 	TK_LPAREN, TK_RPAREN,
+
+	/* OPERATOR is defined between TK_OP_BEG and TK_OP_END */
+	TK_OP_BEG,
 	/* operator: priority 1 */
 	TK_AND, TK_OR,
 	/* operator: priority 2 */
@@ -24,7 +27,9 @@ enum {
 	/* operator: priority 5 */
 	TK_MUL, TK_DIV,
 	/* operator: priority 6 */
-	TK_NOT, TK_DEREF, TK_NEG
+	TK_NOT, TK_DEREF, TK_NEG,
+	/* End here*/
+	TK_OP_END
 
 };
 
@@ -111,7 +116,7 @@ static bool make_token(char *e) {
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
 
-        /* TODO: Now a new token is recognized with rules[i]. Add codes
+        /* Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
@@ -128,7 +133,8 @@ static bool make_token(char *e) {
 					case TK_AND: case TK_OR: case TK_EQ: case TK_NEQ:
 					case TK_L: case TK_LE: case TK_G: case TK_GE:
 					case TK_ADD: case TK_SUB: case TK_MUL: case TK_DIV:
-					case TK_NOT: case TK_DEREF: case TK_LPAREN: case TK_RPAREN:
+					case TK_NOT: case TK_LPAREN: case TK_RPAREN:
+					case TK_NEG: case TK_DEREF:		//in fact, these two cases couldn't appear here
 						tokens[nr_token].type = rules[i].token_type;
 						tokens[nr_token].str[0] = '\0';
 						nr_token++;	
@@ -160,7 +166,7 @@ static bool make_token(char *e) {
 
 static bool parentheses_are_matched(int p, int q) {
 	int stack_top = 0, i;
-	for(i = p; i <= q; ++i) 
+	for (i = p; i <= q; ++i) 
 		if (tokens[i].type == TK_LPAREN) 
 			stack_top++;
 		else if (tokens[i].type == TK_RPAREN) {
@@ -168,6 +174,8 @@ static bool parentheses_are_matched(int p, int q) {
 				return false;
 			stack_top--;
 		}
+	if (stack_top != 0)
+		return false;
 	return true;
 }
 
@@ -196,19 +204,25 @@ static bool check_parentheses(int p, int q) {
 
 static bool is_operator(int k) {
 	int type = tokens[k].type;
-	return (type >= TK_EQ) && (type <= TK_DIV);
+	return (type > TK_OP_BEG) && (type < TK_OP_END);
 }
 
-static int priority(int k) {
+static int operator_priority(int k) {
 	switch (tokens[k].type) {
-		case TK_EQ:
+		case TK_AND: case TK_OR:
 			return 1;
-		case TK_ADD: case TK_SUB:
+		case TK_EQ: case TK_NEQ:
 			return 2;
-		case TK_MUL: case TK_DIV:
+		case TK_L: case TK_LE: case TK_G: case TK_GE:
 			return 3;
+		case TK_ADD: case TK_SUB:
+			return 4;
+		case TK_MUL: case TK_DIV:
+			return 5;
+		case TK_NOT: case TK_DEREF: case TK_NEG:
+			return 6;
 		default:
-			return -1;
+			return 0;
 	}
 }
 
@@ -221,7 +235,7 @@ static int dominant_operator(int p, int q) {
 			i = find_corresponding_parenthesis(i);
 		/* If is operator, compare the priority*/
 		else if (is_operator(i)) {
-			int pri = priority(i);
+			int pri = operator_priority(i);
 			if(pri <= cur_priority) {
 				cur_dominant = i;
 				cur_priority = pri;
@@ -229,6 +243,19 @@ static int dominant_operator(int p, int q) {
 		}
 	}	
 	return cur_dominant;
+}
+
+static void parse_special_token()
+{
+	int i;
+	for (i = 0; i < nr_token; ++i) {
+		if (tokens[i].type == TK_MUL 
+				&& (i == 0 || is_operator(i - 1) || tokens[i - 1].type == TK_LPAREN))
+			tokens[i].type = TK_DEREF;
+		else if (tokens[i].type == TK_SUB
+				&& (i == 0 || is_operator(i - 1) || tokens[i - 1].type == TK_LPAREN))
+			tokens[i].type = TK_NEG;
+	}
 }
 
 int eval(int p, int q, bool *success) {
@@ -288,6 +315,8 @@ uint32_t expr(char *e, bool *success) {
 		print_error("Syntex Error: Parentheses are not matched!");
 		return 0;
 	} 
+
+	parse_special_token();
 
 	int i;
 	for (i = 0; i < nr_token; ++i) 
