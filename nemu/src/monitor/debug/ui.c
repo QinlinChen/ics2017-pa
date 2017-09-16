@@ -108,7 +108,7 @@ static int cmd_x(char *args) {
 	int i, j, index = expr;
 	for (i = 0; i < N; ++i) {
 		uint32_t value = vaddr_read(index, 4);
-		char *addr = (char *)&value;
+		uint8_t *addr = (uint8_t *)&value;
 		printf("0x");
 		for (j = 0; j < 4; ++j)
 			printf("%02x", addr[j]);
