@@ -14,8 +14,8 @@ enum {
 	/* parentheses */
 	TK_LPAREN, TK_RPAREN,
 
-	/* OPERATOR is defined between TK_OP_BEG and TK_OP_END */
-	TK_OP_BEG,
+	TK_OP_BEG,		// operator definition begin
+	TK_BOP_BEG,		// binary operator definition begin	
 	/* operator: priority 1 */
 	TK_AND, TK_OR,
 	/* operator: priority 2 */
@@ -26,10 +26,12 @@ enum {
 	TK_ADD, TK_SUB, 
 	/* operator: priority 5 */
 	TK_MUL, TK_DIV,
+	TK_BOP_END,		// binary operator definition end
+	TK_UOP_BEG,		// unary operator definition begin
 	/* operator: priority 6 */
 	TK_NOT, TK_DEREF, TK_NEG,
-	/* End here*/
-	TK_OP_END
+	TK_UOP_END,		// unary operator definition end
+	TK_OP_END			// operator defintion end
 
 };
 
@@ -202,13 +204,20 @@ static bool check_parentheses(int p, int q) {
 		&& (find_corresponding_parenthesis(p) == q);
 }
 
-static bool is_operator(int k) {
-	int type = tokens[k].type;
+static bool is_operator(int type) {
 	return (type > TK_OP_BEG) && (type < TK_OP_END);
 }
 
-static int operator_priority(int k) {
-	switch (tokens[k].type) {
+static bool is_binary_operator(int type) {
+	return (type > TK_BOP_BEG) && (type < TK_BOP_END);
+}
+
+static bool is_unary_operator(int type) {
+	return (type > TK_UOP_BEG) && (type < TK_UOP_END);
+}
+
+static int operator_priority(int type) {
+	switch (type) {
 		case TK_AND: case TK_OR:
 			return 1;
 		case TK_EQ: case TK_NEQ:
@@ -227,15 +236,16 @@ static int operator_priority(int k) {
 }
 
 static int dominant_operator(int p, int q) {
-	int i, cur_dominant = -1, cur_priority = 1000;
+	int i, type, cur_dominant = -1, cur_priority = 1000;
 	for (i = p; i <= q; ++i) {
+		type = tokens[i].type;
 		/* If find left parenthesis, then
 		 * jump to the corresponding right parenthesis*/
-		if (tokens[i].type == TK_LPAREN) 
+		if (type == TK_LPAREN) 
 			i = find_corresponding_parenthesis(i);
 		/* If is operator, compare the priority*/
-		else if (is_operator(i)) {
-			int pri = operator_priority(i);
+		else if (is_operator(type)) {
+			int pri = operator_priority(type);
 			if(pri <= cur_priority) {
 				cur_dominant = i;
 				cur_priority = pri;
@@ -245,17 +255,46 @@ static int dominant_operator(int p, int q) {
 	return cur_dominant;
 }
 
-static void parse_special_token()
-{
+static void parse_special_token() {
 	int i;
 	for (i = 0; i < nr_token; ++i) {
 		if (tokens[i].type == TK_MUL 
-				&& (i == 0 || is_operator(i - 1) || tokens[i - 1].type == TK_LPAREN))
+				&& (i == 0 || is_operator(tokens[i - 1].type) 
+					|| tokens[i - 1].type == TK_LPAREN))
 			tokens[i].type = TK_DEREF;
 		else if (tokens[i].type == TK_SUB
-				&& (i == 0 || is_operator(i - 1) || tokens[i - 1].type == TK_LPAREN))
+				&& (i == 0 || is_operator(tokens[i - 1].type)
+				 	|| tokens[i - 1].type == TK_LPAREN))
 			tokens[i].type = TK_NEG;
 	}
+}
+
+static int find_reg_index(char *reg, const char *regs[8]) {
+	int i;
+	for (i = 0; i < 8; ++i) 
+		if (strcmp(reg, regs[i]) == 0)
+			return i;
+	return -1;
+}
+
+static uint32_t regname_to_val(char *name) {
+	int index;
+	if (strcmp(name, "eip") == 0)
+		return cpu.eip;
+	else if (name[0] == 'e') {
+		index = find_reg_index(name, regsl);
+		Assert(index >= 0, "Error: %s doesn't exist!", name);
+		return reg_l(index);
+	}
+	else {
+		index = find_reg_index(name, regsw);
+		if (index >= 0) 
+			return reg_w(index);
+
+		index = find_reg_index(name, regsb);
+		Assert(index >= 0, "Error: %s doesn't exist!", name);
+		return reg_b(index);
+	}	
 }
 
 int eval(int p, int q, bool *success) {
@@ -267,12 +306,31 @@ int eval(int p, int q, bool *success) {
 		print_error("Syntex Error: Bad expression!");
 		return -1;	
 	}	
+	/* Process DINT, HINT and REG */
 	else if (p == q) {
-		return atoi(tokens[p].str);
+		int type = tokens[p].type;
+		char *str = tokens[p].str;
+
+		if (type == TK_HINT) {
+			int val;
+			if (!str || (sscanf(str, "%x", &val) != 1)) {
+				*success = false;
+				print_error("Error: Fail to read hexadecimal number!");
+				return -1;
+			}
+			return val;
+		}
+		else if (type == TK_DINT)
+		  return atoi(str);
+		else if (type == TK_REG) {
+			return (int)regname_to_val(str + 1);	
+		}
+		Assert(0, "Neither int nor hex int nor reg!");
 	}	
 	else if (check_parentheses(p, q) == true){
 		return eval(p + 1, q - 1, success);
 	}
+	/* Process operators */
 	else {
 		int pos = dominant_operator(p, q);
 		if (pos < 0) {
@@ -281,25 +339,57 @@ int eval(int p, int q, bool *success) {
 			return -1;
 		}
 
-		int lval = eval(p, pos - 1, success),
-				rval = eval(pos + 1, q, success);
-		if (!(*success)) 
-			return -1;
+		int op = tokens[pos].type;
+		if (is_binary_operator(op)) {
+			int lval = eval(p, pos - 1, success),
+					rval = eval(pos + 1, q, success);
+			if (!(*success)) 
+				return -1;
 		
-		switch (tokens[pos].type) {
-			case TK_ADD: return lval + rval;
-			case TK_SUB: return lval - rval;
-			case TK_MUL: return lval * rval;
-			case TK_DIV:
-				if (rval == 0) {
-					*success = false;
-					print_error("Divisor Error: Divisor is zero!");
-					return -1;
-				} 
-				return lval / rval;
-			default:
-				assert(0);
+			switch (op) {
+				case TK_AND: return lval && rval;
+				case TK_OR:  return lval && rval;
+				case TK_EQ:  return lval == rval;
+				case TK_NEQ: return lval != rval;
+				case TK_LE:  return lval <= rval;
+				case TK_GE:  return lval >= rval;
+				case TK_L:   return lval < rval;
+				case TK_G:	 return lval > rval;						 
+				case TK_ADD: return lval + rval;
+				case TK_SUB: return lval - rval;
+				case TK_MUL: return lval * rval;
+				case TK_DIV:
+					if (rval == 0) {
+						*success = false;
+						print_error("Divisor Error: Divisor is zero!");
+						return -1;
+					} 
+					return lval / rval;
+				default:
+					assert(0);
+			}
 		}
+		else if (is_unary_operator(op)) {
+			int rval = eval(pos + 1, q, success);
+			if (!(*success)) 
+				return -1;
+			
+			vaddr_t addr;
+			uint32_t mem_val;
+
+			switch (op) {
+				case TK_NOT: return !rval;
+				case TK_NEG: return -rval;
+				case TK_DEREF:
+					addr = rval;
+					mem_val = vaddr_read(addr, 4);
+					return (int)mem_val;					
+				default:
+					assert(0);
+			}
+		}
+		else
+			Assert(0, "Neither binary operator nor unary operator!");
 	}
 }
 
