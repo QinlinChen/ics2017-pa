@@ -45,7 +45,7 @@ static struct rule {
 	{"$(e?[a-d][x]|e?[sb][p]|e?[sd][i]|[a-d][hl]|eip)", TK_REG},		//regs
 
 	{"&{2}", TK_AND},				// logic and
-	{"|{2}", TK_OR},				// logic or
+	{"\\|{2}", TK_OR},				// logic or
 
 	{"==", TK_EQ},					// equal
 	{"!=", TK_NEQ},					// not equal which is prior to DEREF
