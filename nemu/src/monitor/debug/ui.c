@@ -85,7 +85,6 @@ static int cmd_p(char *args) {
 		return 0;
 	}
 	
-	/*------------TO REALIZE--------------*/
 	bool success;
 	int val = expr(expression, &success);
 	if (!success)
@@ -95,25 +94,30 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_x(char *args) {
-	int N, expr;
-	if (!args){
+	char *arg = strtok(NULL, " ");
+	if (!arg){
 		print_error("Argument Error: There should be at least two arguments!");
 		return 0;
 	}
-	if (sscanf(args, "%d %x", &N, &expr) != 2) {
-		print_error("Argument Error: Arguments should be N and EXPR");
-		return 0;
-	}			
 
-	int i, j, index = expr;
+	int N = atoi(arg);
+	char *expression  = args +  strlen(arg) + 1;
+	if (expression - args >= strlen(args)) {
+		print_error("Argument Error: There should be at least two arguments!");
+		return 0;
+	}				
+
+	bool success;
+	vaddr_t addr = expr(expression, &success);
+	int i, j;
 	for (i = 0; i < N; ++i) {
-		uint32_t value = vaddr_read(index, 4);
-		uint8_t *addr = (uint8_t *)&value;
+		uint32_t value = vaddr_read(addr, 4);
+		uint8_t *pbyte = (uint8_t *)&value;
 		printf("0x");
 		for (j = 0; j < 4; ++j)
-			printf("%02x", addr[j]);
+			printf("%02x", pbyte[j]);
 		putchar(((i % 4 == 3) ? '\n': '\t'));
-		index += 4;
+		addr += 4;
 	}
 	if (i % 4)
 		putchar('\n');
