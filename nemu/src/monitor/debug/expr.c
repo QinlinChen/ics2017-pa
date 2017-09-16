@@ -150,8 +150,26 @@ static bool parentheses_are_matched(int p, int q) {
 	return true;
 }
 
+static int find_corresponding_parenthesis(int p) {
+	/* precondition:
+	 * token[p].type == TK_LPAREN
+	 * parentheses_are_matched(0, nr_token - 1) == true */
+	int stack_top = 1;
+	while (++p < nr_token) {
+		if (tokens[p].type == TK_LPAREN)
+			stack_top++;
+		else if (tokens[p].type == TK_RPAREN) {
+			stack_top--;
+			if (stack_top == 0)
+				break;	
+		}
+	}
+	Assert(p < nr_token, "Fail to find corresponding parenthesis!");
+	return p;
+}
+
 static bool check_parentheses(int p, int q) {
-	return (tokens[p].type == TK_LPAREN) && (tokens[q].type == TK_RPAREN);
+	return find_corresponding_parenthesis(p) == q;
 }
 
 static bool is_operator(int k) {
@@ -177,16 +195,8 @@ static int dominant_operator(int p, int q) {
 	for (i = p; i <= q; ++i) {
 		/* If find left parenthesis, then
 		 * jump to the corresponding right parenthesis*/
-		if (tokens[i].type == TK_LPAREN) {
-			int stack_top = 1;
-			while (stack_top) {
-				i++;
-				if (tokens[i].type == TK_LPAREN)
-					stack_top++;
-				else if (tokens[i].type == TK_RPAREN)
-					stack_top--;
-			}
-		} 
+		if (tokens[i].type == TK_LPAREN) 
+			i = find_corresponding_parenthesis(i);
 		/* If is operator, compare the priority*/
 		else if (is_operator(i)) {
 			int pri = priority(i);
