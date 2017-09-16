@@ -105,9 +105,13 @@ static int cmd_x(char *args) {
 		return 0;
 	}			
 
-	int i, index = expr;
+	int i, j, index = expr;
 	for (i = 0; i < N; ++i) {
-		printf("0x%02x", vaddr_read(index, 4));
+		uint32_t value = vaddr_read(index, 4);
+		char *addr = (char *)&value;
+		printf("0x");
+		for (j = 0; j < 4; ++j)
+			printf("%02x", addr[j]);
 		putchar(((i % 4 == 3) ? '\n': '\t'));
 		index += 4;
 	}
