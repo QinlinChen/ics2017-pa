@@ -105,14 +105,11 @@ static int cmd_x(char *args) {
 		return 0;
 	}			
 
-	int i, j, index = expr;
-	const int bytes_per_unit = 4;
+	int i, index = expr;
 	for (i = 0; i < N; ++i) {
-		printf("0x");
-		for (j = 0; j < bytes_per_unit; ++j)
-			printf("%02x", pmem[index + j]);
+		printf("0x%02x", vaddr_read(index, 4));
 		putchar(((i % 4 == 3) ? '\n': '\t'));
-		index += bytes_per_unit;
+		index += 4;
 	}
 	if (i % 4)
 		putchar('\n');
