@@ -88,10 +88,8 @@ static int cmd_p(char *args) {
 	/*------------TO REALIZE--------------*/
 	bool success;
 	int val = expr(expression, &success);
-	if (!success){
-		print_error("Error: Fail to make token!");
+	if (!success)
 		return 0;
-	}
 	printf("%s = %d\n", expression, val);	
 	return 0;	
 }
