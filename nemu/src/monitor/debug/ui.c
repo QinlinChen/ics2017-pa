@@ -45,12 +45,12 @@ static int cmd_si(char *args) {
 	int N = 0;
 	if (!arg)
 		N = 1;				//if arg is NULL, execute 1 instruction
-	else if ((N = atoi(arg)) == 0)
-		print_error("Argument Error: Argument should be a number!");
+	else if ((N = atoi(arg)) <= 0) {
+		print_error("Argument Error: Argument should be a positive integer!");
+		return 0;
+	}
 
-	int i;
-	for (i = 0; i < N; ++i)
-			exec_wrapper(true);			//print infomation
+	cpu_exec(N);
 	return 0;
 }
 
@@ -87,9 +87,8 @@ static int cmd_p(char *args) {
 	
 	bool success;
 	int val = expr(expression, &success);
-	if (!success)
-		return 0;
-	printf("%s = %d\n", expression, val);	
+	if (success)
+		printf("%s = %d\n", expression, val);	
 	return 0;	
 }
 
@@ -115,6 +114,9 @@ static int cmd_x(char *args) {
 
 	bool success;
 	vaddr_t addr = expr(expression, &success);
+	if (!success)
+		return 0;
+
 	int i, j;
 	for (i = 0; i < N; ++i) {
 		printf("  0x%x:    ", addr);
