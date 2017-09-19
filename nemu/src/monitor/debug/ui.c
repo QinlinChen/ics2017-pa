@@ -137,7 +137,7 @@ static int cmd_w(char *args) {
 	}
 
 	if (!insert_wp(expr))
-		print_error("Error: Fail to insert watchpoint");
+		print_error("Error: Fail to insert watchpoint!");
 	return 0;	
 }
 
@@ -147,10 +147,10 @@ static int cmd_d(char *args) {
 		print_error("Argument Error: There should be an argument!");
 		return 0;
 	}
-	// int N = atoi(arg);
 
-	/*------------TO REALIZE--------------*/
-	puts("Deleting Watchpoint has not been realized.");
+	int N = atoi(arg);
+	if (!delete_wp(N)) 
+		print_error("Error: Fail to delete watchpoint!");
 	return 0;	
 }
 
