@@ -30,12 +30,18 @@ void init_wp_pool() {
   free_ = wp_pool;
 }
 
-bool insert_wp(char *expr) {
+bool insert_wp(char *expression) {
 	WP *wp = new_wp();
-	if (strlen(expr) >= 64) 
+	if (strlen(expression) >= 64) 
 		return false;
-	strcpy(wp->expr, expr);
 	
+	bool success;
+	uint32_t val = expr(expression, &success);
+	if (!success)
+		return false;
+
+	strcpy(wp->expr, expression);
+	wp->pre_val = val;
 	wp->next = head;
 	head = wp;
 	return true;

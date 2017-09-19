@@ -3,8 +3,8 @@
 
 #include "common.h"
 
-bool insert_wp(char *expr);
-bool delete_wp(int N);
+bool insert_wp(char *);
+bool delete_wp(int);
 void print_all_wp();
 
 typedef struct watchpoint {
