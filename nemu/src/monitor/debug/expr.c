@@ -14,24 +14,25 @@ enum {
 	/* parentheses */
 	TK_LPAREN, TK_RPAREN,
 
-	TK_OP_BEG,		// operator definition begin
-	TK_BOP_BEG,		// binary operator definition begin	
-	/* operator: priority 1 */
-	TK_AND, TK_OR,
-	/* operator: priority 2 */
-	TK_EQ, TK_NEQ,
-	/* operator: priority 3 */
-	TK_L, TK_LE, TK_G, TK_GE,
-	/* operator: priority 4 */ 
-	TK_ADD, TK_SUB, 
-	/* operator: priority 5 */
-	TK_MUL, TK_DIV,
-	TK_BOP_END,		// binary operator definition end
-	TK_UOP_BEG,		// unary operator definition begin
-	/* operator: priority 6 */
-	TK_NOT, TK_DEREF, TK_NEG,
-	TK_UOP_END,		// unary operator definition end
-	TK_OP_END			// operator defintion end
+	TK_OP_BEG,				// operator definition BEGIN
+	
+	TK_BOP_BEG,				// binary operator definition BEGIN	
+	TK_OR,						// priority 1
+	TK_AND,						// priority 2
+	TK_BOR,						// priority 3
+	TK_BXOR,					// priority 4
+	TK_BAND,					// priority 5
+	TK_EQ, TK_NEQ,		// priority 6
+	TK_L, TK_LE, TK_G, TK_GE,		// priority 7
+	TK_ADD, TK_SUB,							// priority 8
+	TK_MUL, TK_DIV, TK_MOD,			// priority 9
+	TK_BOP_END,				// binary operator definition END
+	
+	TK_UOP_BEG,				// unary operator definition BEGIN
+	TK_BNOT, TK_NOT, TK_DEREF, TK_NEG,		//priority 10
+	TK_UOP_END,				// unary operator definition END
+
+	TK_OP_END					// operator defintion end
 
 };
 
@@ -52,7 +53,11 @@ static struct rule {
 	{"\\$(e?[a-d][x]|e?[sb][p]|e?[sd][i]|[a-d][hl]|eip)", TK_REG},		//regs
 
 	{"&{2}", TK_AND},				// logic and
-	{"\\|{2}", TK_OR},				// logic or
+	{"\\|{2}", TK_OR},			// logic or
+
+	{"&", TK_BAND},					// bit and
+	{"\\|", TK_BOR},				// bit or
+	{"\\^", TK_BXOR},				// bit xor
 
 	{"==", TK_EQ},					// equal
 	{"!=", TK_NEQ},					// not equal which is prior to DEREF
@@ -67,8 +72,10 @@ static struct rule {
 
 	{"\\*", TK_MUL},				// multiply OR dereference
 	{"/", TK_DIV},					// divide
-	
-	{"!", TK_NOT}						// logic not
+	{"%%", TK_MOD},					// mod
+
+	{"!", TK_NOT},					// logic not
+	{"~", TK_BNOT}					// bit not
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -115,7 +122,7 @@ static bool make_token(char *e) {
         int substr_len = pmatch.rm_eo;
 				
 				
-        Log_write("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
@@ -131,29 +138,22 @@ static bool make_token(char *e) {
 					print_error("Error: the length of substring is more than 31!");
 					return false;
 				}
-        switch (rules[i].token_type) {	
-					/* cases that needn't save the substring */	
-					case TK_AND: case TK_OR: case TK_EQ: case TK_NEQ:
-					case TK_L: case TK_LE: case TK_G: case TK_GE:
-					case TK_ADD: case TK_SUB: case TK_MUL: case TK_DIV:
-					case TK_NOT: case TK_LPAREN: case TK_RPAREN:
-					case TK_NEG: case TK_DEREF:		//in fact, these two cases couldn't appear here
-						tokens[nr_token].type = rules[i].token_type;
-						tokens[nr_token].str[0] = '\0';
-						nr_token++;	
-						break;
-					/* cases that need save the substring */
-					case TK_DINT: case TK_HINT: case TK_REG:
-						tokens[nr_token].type = rules[i].token_type;
-						memcpy(tokens[nr_token].str, substr_start, substr_len);
-						tokens[nr_token].str[substr_len] = '\0';
-						nr_token++;	
-						break;
-					/* cases that ignored */
-          default: 
-						break;
-        }
 
+				int type = rules[i].token_type;
+				/* cases that need to save the substring */
+				if (type >= TK_DINT && type <= TK_REG) {
+					tokens[nr_token].type = rules[i].token_type;
+					memcpy(tokens[nr_token].str, substr_start, substr_len);
+					tokens[nr_token].str[substr_len] = '\0';
+					nr_token++;	
+				}
+				/* cases that needn't save the substring */	
+				else if (type >= TK_LPAREN && type <= TK_OP_END) {
+					tokens[nr_token].type = rules[i].token_type;
+					tokens[nr_token].str[0] = '\0';
+					nr_token++;	
+				}
+				/* others ignored */
         break;
       }
     }
@@ -219,18 +219,21 @@ static bool is_unary_operator(int type) {
 
 static int operator_priority(int type) {
 	switch (type) {
-		case TK_AND: case TK_OR:
-			return 1;
-		case TK_EQ: case TK_NEQ:
-			return 2;
-		case TK_L: case TK_LE: case TK_G: case TK_GE:
-			return 3;
-		case TK_ADD: case TK_SUB:
-			return 4;
-		case TK_MUL: case TK_DIV:
-			return 5;
-		case TK_NOT: case TK_DEREF: case TK_NEG:
+		case TK_OR:   return 1;
+		case TK_AND:  return 2;
+		case TK_BOR:  return 3;
+		case TK_BXOR: return 4;
+		case TK_BAND: return 5;
+		case TK_EQ:		case TK_NEQ:
 			return 6;
+		case TK_L:		case TK_LE:		case TK_G:			case TK_GE:
+			return 7;
+		case TK_ADD:	case TK_SUB:
+			return 8;
+		case TK_MUL:	case TK_DIV:	case TK_MOD:
+			return 9;
+		case TK_BNOT:	case TK_NOT:	case TK_DEREF:	case TK_NEG:
+			return 10;
 		default:
 			return 0;
 	}
@@ -353,17 +356,20 @@ static int eval(int p, int q, bool *success) {
 				return -1;
 		
 			switch (op) {
+				case TK_OR:  return lval || rval;
 				case TK_AND: return lval && rval;
-				case TK_OR:  return lval && rval;
+				case TK_BOR: return lval |  rval;
+				case TK_BXOR:return lval ^  rval;
+				case TK_BAND:return lval &  rval;
 				case TK_EQ:  return lval == rval;
 				case TK_NEQ: return lval != rval;
 				case TK_LE:  return lval <= rval;
 				case TK_GE:  return lval >= rval;
-				case TK_L:   return lval < rval;
-				case TK_G:	 return lval > rval;						 
-				case TK_ADD: return lval + rval;
-				case TK_SUB: return lval - rval;
-				case TK_MUL: return lval * rval;
+				case TK_L:   return lval <  rval;
+				case TK_G:	 return lval >  rval;						 
+				case TK_ADD: return lval +  rval;
+				case TK_SUB: return lval -  rval;
+				case TK_MUL: return lval *  rval;
 				case TK_DIV:
 					if (rval == 0) {
 						*success = false;
@@ -371,6 +377,13 @@ static int eval(int p, int q, bool *success) {
 						return -1;
 					} 
 					return lval / rval;
+				case TK_MOD:
+					if (rval == 0) {
+						*success = false;
+						print_error("Mod Error: mod is zero!");
+						return -1;
+					} 
+					return lval % rval;
 				default:
 					assert(0);
 			}
@@ -386,8 +399,9 @@ static int eval(int p, int q, bool *success) {
 			uint32_t mem_val;
 
 			switch (op) {
-				case TK_NOT: return !rval;
-				case TK_NEG: return -rval;
+				case TK_BNOT: return ~rval;
+				case TK_NOT:  return !rval;
+				case TK_NEG:  return -rval;
 				case TK_DEREF:
 					addr = rval;
 					mem_val = vaddr_read(addr, 4);
