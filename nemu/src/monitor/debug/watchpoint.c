@@ -37,7 +37,7 @@ bool insert_wp(char *expr) {
 	strcpy(wp->expr, expr);
 	
 	wp->next = head;
-	head = wp->next;
+	head = wp;
 	return true;
 }
 

@@ -130,14 +130,14 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_w(char *args) {
-	char *expr = strtok(NULL, " ");
+	char *expr = args; 
 	if (!expr) {
-		print_error("Argument Error: There should be an argument!");
+		print_error("Argument Error: There should be an expression!");
 		return 0;
 	}
 
-	/*------------TO REALIZE--------------*/
-	puts("Setting Watchpoint has not been realized.");
+	if (!insert_wp(expr))
+		print_error("Error: Fail to insert watchpoint");
 	return 0;	
 }
 
