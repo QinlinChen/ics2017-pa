@@ -6,6 +6,20 @@
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
 
+WP *new_wp()
+{
+	Assert(free_, "No extra space in wp_pool!");
+	WP *ret = free_;
+	free_ = free_->next;
+	return ret;
+}
+
+void free_wp(WP *wp)
+{
+	wp->next = free_;
+	free_ = wp;
+}
+
 void init_wp_pool() {
   int i;
   for (i = 0; i < NR_WP; i ++) {
