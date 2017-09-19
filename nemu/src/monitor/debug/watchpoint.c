@@ -1,5 +1,6 @@
 #include "monitor/watchpoint.h"
 #include "monitor/expr.h"
+#include "cpu/reg.h"
 
 #define NR_WP 32
 
@@ -76,5 +77,28 @@ void print_all_wp() {
 		printf("%d\t%s\n", p->NO, p->expr);
 }
 
+bool check_watchpoints() {
+	WP *p;
+	bool success;
+	bool hit_watchpoint = false;
+	uint32_t new_val, pre_val;
 
+	for (p = head; p != NULL; p = p->next) {
+		new_val = expr(p->expr, &success);
+		pre_val = p->pre_val;
+		if (!success)
+			return false;
+		if (new_val != pre_val) {
+			printf("Hit watchpoint %d: %s\n", p->NO, p->expr);
+			printf("at 0x%x\n", cpu.eip);
+			printf("Old value = %uU = %d = 0x%x\n",
+					   pre_val, (int)pre_val, pre_val);
+			printf("New value = %uU = %d = 0x%x\n",
+					   new_val, (int)new_val, new_val);
+			p->pre_val = new_val;
+			hit_watchpoint = true;
+		}
+	}
+	return hit_watchpoint;
+}
 
