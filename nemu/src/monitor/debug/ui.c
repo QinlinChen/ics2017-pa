@@ -86,9 +86,9 @@ static int cmd_p(char *args) {
 	}
 	
 	bool success;
-	int val = expr(expression, &success);
+	uint32_t val = expr(expression, &success);
 	if (success)
-		printf("%s = %d\n", expression, val);	
+		printf("%s = %dU = %d = 0x%x\n", expression, val, (int)val, val);	
 	return 0;	
 }
 

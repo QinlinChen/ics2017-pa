@@ -416,6 +416,5 @@ uint32_t expr(char *e, bool *success) {
 	parse_special_token();
 
 	*success = true;
-	uint32_t val = eval(0, nr_token - 1, success);
-  return val; 
+	return eval(0, nr_token - 1, success);
 }
