@@ -72,7 +72,7 @@ static struct rule {
 
 	{"\\*", TK_MUL},				// multiply OR dereference
 	{"/", TK_DIV},					// divide
-	{"%%", TK_MOD},					// mod
+	{"%", TK_MOD},					// mod
 
 	{"!", TK_NOT},					// logic not
 	{"~", TK_BNOT}					// bit not
