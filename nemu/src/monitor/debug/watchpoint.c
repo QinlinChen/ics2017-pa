@@ -64,9 +64,9 @@ void print_all_wp() {
 		printf("No watchpoints!\n");
 		return;
 	}
-	WP *p;
 	printf("Num\tWhat\n");
-	for (p = head; p != NULL; ++p) 
+	WP *p;
+	for (p = head; p != NULL; p = p->next) 
 		printf("%d\t%s\n", p->NO, p->expr);
 }
 
