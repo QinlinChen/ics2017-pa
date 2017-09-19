@@ -69,8 +69,7 @@ static int cmd_info(char *args) {
 			printf("%s\t0x%08x\t%10d\n", "eip", cpu.eip, cpu.eip);
 			break;
 		case 'w':
-			/*-------------TO REALIZE---------------*/
-			printf("Something about watchpoint...\n");
+			print_all_wp();
 			break;
 		default:
 			print_error("Argument Error: Argument should be r or w!");
