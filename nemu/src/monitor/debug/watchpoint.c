@@ -31,7 +31,6 @@ void init_wp_pool() {
 }
 
 bool insert_wp(char *expression) {
-	WP *wp = new_wp();
 	if (strlen(expression) >= 64) 
 		return false;
 	
@@ -40,6 +39,7 @@ bool insert_wp(char *expression) {
 	if (!success)
 		return false;
 
+	WP *wp = new_wp();
 	strcpy(wp->expr, expression);
 	wp->pre_val = val;
 	wp->next = head;
