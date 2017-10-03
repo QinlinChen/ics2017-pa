@@ -37,8 +37,9 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  TODO();
-
+  op->simm = instr_fetch(eip, op->width);
+  if (op->width == 1)
+    op->simm = (int8_t)op->simm;
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -309,7 +310,17 @@ void operand_write(Operand *op, rtlreg_t* src) {
   else { assert(0); }
 }
 
-make_DHelper(call_Av) {
-  decode_op_I(eip, id_dest, true);
-  rtl_add(&id_dest->val, eip, &id_dest->val);
+make_DHelper(call_rel32) {
+  decode_op_SI(eip, id_src, true);
+  rtl_add(&id_src->val, eip, &id_src->val);
+}
+
+// 32bit only
+make_DHelper(push_r) {
+  decode_op_r(eip, id_src, true);
+}
+
+// 32bit only
+make_DHelper(pop_r) {
+  decode_op_r(eip, id_src, false);
 }

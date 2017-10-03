@@ -5,14 +5,16 @@ make_EHelper(mov) {
   print_asm_template2(mov);
 }
 
+// 32bit only
 make_EHelper(push) {
-  TODO();
+  rtl_push(&id_src->val);
 
   print_asm_template1(push);
 }
 
+// 32bit only
 make_EHelper(pop) {
-  TODO();
+  rtl_pop(&reg_l(id_src->reg));
 
   print_asm_template1(pop);
 }
