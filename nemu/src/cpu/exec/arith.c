@@ -9,8 +9,22 @@ make_EHelper(add) {
 make_EHelper(sub) {
   rtl_sub(&t0, &id_dest->val, &id_src->val);
   rtl_update_ZFSF(&t0, id_dest->width);
+
+  rtl_msb(&t1, &id_dest->val, id_dest->width);
+  rtl_msb(&t2, &id_src->val, id_dest->width);
+  rtl_msb(&t3, &t0, id_dest->width);
+  // OF = (t1 != t2) && (t2 == t3)
+  rtl_xor(&t1, &t1, &t2);
+  rtl_xor(&t2, &t2, &t3);
+  rtl_not(&t2);
+  rtl_and(&t1, &t1, &t2);
+  rtl_set_OF(&t1);
   
-  // rtl_msb(&t1, &t0, id_dest->width);
+  // CF = (id_dest < id_src)
+  rtl_ext(&t1, &id_dest->val, id_dest->width);
+  rtl_ext(&t2, &id_src->val, id_dest->width);
+  rtl_sltu(&t1, &t1, &t2);
+  rtl_set_CF(&t1);
   
   operand_write(id_dest, &t0);
 
