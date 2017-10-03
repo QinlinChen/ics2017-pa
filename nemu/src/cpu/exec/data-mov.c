@@ -7,14 +7,14 @@ make_EHelper(mov) {
 
 // 32bit only
 make_EHelper(push) {
-  rtl_push(&id_src->val);
+  rtl_push(&id_dest->val);
 
   print_asm_template1(push);
 }
 
 // 32bit only
 make_EHelper(pop) {
-  rtl_pop(&reg_l(id_src->reg));
+  rtl_pop(&reg_l(id_dest->reg));
 
   print_asm_template1(pop);
 }

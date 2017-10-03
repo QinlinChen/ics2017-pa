@@ -311,16 +311,16 @@ void operand_write(Operand *op, rtlreg_t* src) {
 }
 
 make_DHelper(call_rel32) {
-  decode_op_SI(eip, id_src, true);
-  rtl_add(&id_src->val, eip, &id_src->val);
+  decode_op_SI(eip, id_dest, true);
+  rtl_add(&id_dest->val, eip, &id_dest->val);
 }
 
 // 32bit only
 make_DHelper(push_r) {
-  decode_op_r(eip, id_src, true);
+  decode_op_r(eip, id_dest, true);
 }
 
 // 32bit only
 make_DHelper(pop_r) {
-  decode_op_r(eip, id_src, false);
+  decode_op_r(eip, id_dest, false);
 }
