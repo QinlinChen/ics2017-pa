@@ -315,12 +315,3 @@ make_DHelper(call_rel32) {
   rtl_add(&id_dest->val, eip, &id_dest->val);
 }
 
-// 32bit only
-make_DHelper(push_r) {
-  decode_op_r(eip, id_dest, true);
-}
-
-// 32bit only
-make_DHelper(pop_r) {
-  decode_op_r(eip, id_dest, false);
-}
