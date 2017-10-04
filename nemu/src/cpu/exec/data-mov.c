@@ -14,7 +14,8 @@ make_EHelper(push) {
 
 // 32bit only
 make_EHelper(pop) {
-  rtl_pop(&reg_l(id_dest->reg));
+  rtl_pop(&t0);
+  operand_write(id_dest, &t0);
 
   print_asm_template1(pop);
 }
