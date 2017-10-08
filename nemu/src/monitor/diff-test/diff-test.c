@@ -151,8 +151,11 @@ void difftest_step(uint32_t eip) {
   // Set `diff` as `true` if they are not the same.
   if (r.eax != cpu.eax || r.ecx != cpu.ecx || r.edx != cpu.edx || r.ebx != cpu.ebx
       || r.esp != cpu.esp || r.ebp != cpu.ebp || r.esi != cpu.esi || r.edi != cpu.edi
-      || r.eip != cpu.eip)
+      || r.eip != cpu.eip) {
     diff = true;
+    Log("Detect difference at eip = 0x%x", eip);
+  }
+    
 
   if (diff) {
     nemu_state = NEMU_END;
