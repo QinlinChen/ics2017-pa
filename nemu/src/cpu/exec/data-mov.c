@@ -78,3 +78,10 @@ make_EHelper(lea) {
   operand_write(id_dest, &t2);
   print_asm_template2(lea);
 }
+
+make_EHelper(xchg) {
+  rtl_li(&t0, id_src->val);
+  operand_write(id_dest, &t0);
+  rtl_li(&t0, id_dest->val);
+  operand_write(id_src, &t0);
+}

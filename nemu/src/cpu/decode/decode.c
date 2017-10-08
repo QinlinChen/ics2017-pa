@@ -313,3 +313,8 @@ make_DHelper(call_rel32) {
   rtl_add(&id_dest->val, eip, &id_dest->val);
 }
 
+make_DHelper(r2a) {
+  decode_op_a(eip, id_dest, true);
+  decode_op_r(eip, id_src, true);
+}
+
