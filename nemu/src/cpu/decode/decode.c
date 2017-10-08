@@ -309,11 +309,6 @@ void operand_write(Operand *op, rtlreg_t* src) {
   else { assert(0); }
 }
 
-make_DHelper(call_rel32) {
-  decode_op_SI(eip, id_dest, true);
-  rtl_add(&id_dest->val, eip, &id_dest->val);
-}
-
 make_DHelper(r2a) {
   decode_op_a(eip, id_dest, true);
   decode_op_r(eip, id_src, true);
