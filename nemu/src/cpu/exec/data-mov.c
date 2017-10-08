@@ -45,8 +45,7 @@ make_EHelper(cltd) {
     rtl_shri(&reg_l(R_EDX), &t0, 16);
   }
   else {
-    //rtl_sari(&reg_l(R_EDX), &reg_l(R_EAX), 31);
-    reg_l(R_EDX) = 0x1234;
+    rtl_sari(&reg_l(R_EDX), &reg_l(R_EAX), 31);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
