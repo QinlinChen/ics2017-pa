@@ -17,8 +17,8 @@ make_EHelper(ret);
 
 make_EHelper(add);
 make_EHelper(sub);
-make_EHelper(xor);
-make_EHelper(and);
 make_EHelper(cmp);
 
-
+make_EHelper(xor);
+make_EHelper(and);
+make_EHelper(setcc);
