@@ -26,6 +26,9 @@ make_EHelper(cmp);
 make_EHelper(xor);
 make_EHelper(and);
 make_EHelper(or);
+make_EHelper(sar);
+make_EHelper(shr);
+make_EHelper(shl);
 make_EHelper(setcc);
 make_EHelper(test);
 
