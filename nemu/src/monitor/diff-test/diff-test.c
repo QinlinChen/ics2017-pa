@@ -149,11 +149,41 @@ void difftest_step(uint32_t eip) {
 
   // Check the registers state with QEMU.
   // Set `diff` as `true` if they are not the same.
-  if (r.eax != cpu.eax || r.ecx != cpu.ecx || r.edx != cpu.edx || r.ebx != cpu.ebx
-      || r.esp != cpu.esp || r.ebp != cpu.ebp || r.esi != cpu.esi || r.edi != cpu.edi
-      || r.eip != cpu.eip) {
+  if (r.eax != cpu.eax) {
     diff = true;
-    Log("Detect difference at eip = 0x%x", eip);
+    Log("Detect difference at eip = 0x%x:\tcpu.eax = 0x%x\tr.eax = 0x%x)", eip, cpu.eax, r.eax);     
+  }
+  if (r.ecx != cpu.ecx){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.ecx = 0x%x\tr.ecx = 0x%x)", eip, cpu.ecx, r.ecx);     
+  }
+  if (r.edx != cpu.edx){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.edx = 0x%x\tr.edx = 0x%x)", eip, cpu.edx, r.edx);
+  }
+  if (r.ebx != cpu.ebx){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.ebx = 0x%x\tr.ebx = 0x%x)", eip, cpu.ebx, r.ebx);
+  }
+  if (r.esp != cpu.esp){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.esp = 0x%x\tr.esp = 0x%x)", eip, cpu.esp, r.esp);
+  }
+  if (r.ebp != cpu.ebp){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.ebp = 0x%x\tr.ebp = 0x%x)", eip, cpu.ebp, r.ebp);
+  }
+  if (r.esi != cpu.esi){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.esi = 0x%x\tr.esi = 0x%x)", eip, cpu.esi, r.esi);
+  }
+  if (r.edi != cpu.edi){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.edi = 0x%x\tr.edi = 0x%x)", eip, cpu.edi, r.edi);
+  }
+  if (r.eip != cpu.eip){
+    diff = true;
+    Log("Detect difference at eip = 0x%x:\tcpu.eip = 0x%x\tr.eip = 0x%x)", eip, cpu.eip, r.eip);
   }
     
 
