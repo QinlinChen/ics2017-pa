@@ -20,15 +20,34 @@ make_EHelper(pop) {
   print_asm_template1(pop);
 }
 
+// 32bit only
 make_EHelper(pusha) {
   TODO();
-
+  rtl_lr_l(&t0, R_ESP);
+  rtl_push(&reg_l(R_EAX));
+  rtl_push(&reg_l(R_ECX));
+  rtl_push(&reg_l(R_EDX));
+  rtl_push(&reg_l(R_EBX));
+  rtl_push(&t0);
+  rtl_push(&reg_l(R_EBP));
+  rtl_push(&reg_l(R_ESI));
+  rtl_push(&reg_l(R_EDI));
+  
   print_asm("pusha");
 }
 
+// 32bit only
 make_EHelper(popa) {
   TODO();
-
+  rtl_pop(&reg_l(R_EDI));
+  rtl_pop(&reg_l(R_ESI));
+  rtl_pop(&reg_l(R_EBP));
+  rtl_pop(&t0);
+  rtl_pop(&reg_l(R_EBX));
+  rtl_pop(&reg_l(R_EDX));
+  rtl_pop(&reg_l(R_ECX));
+  rtl_pop(&reg_l(R_EAX));
+  
   print_asm("popa");
 }
 

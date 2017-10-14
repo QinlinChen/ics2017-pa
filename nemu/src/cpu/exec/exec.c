@@ -69,8 +69,6 @@ make_group(gp7,
     EMPTY, EMPTY, EMPTY, EMPTY,
     EMPTY, EMPTY, EMPTY, EMPTY)
 
-/* TODO: Add more instructions!!! */
-
 opcode_entry opcode_table [512] = {
   /* 0x00 */	IDEXW(G2E, add, 1), IDEX(G2E, add), IDEXW(E2G, add, 1), IDEX(E2G, add),
   /* 0x04 */	IDEXW(I2a, add, 1), IDEX(I2a, add), EMPTY, EMPTY,
@@ -96,7 +94,7 @@ opcode_entry opcode_table [512] = {
   /* 0x54 */	IDEX(r, push), IDEX(r, push), IDEX(r, push), IDEX(r, push),
   /* 0x58 */	IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
   /* 0x5c */	IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
-  /* 0x60 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x60 */	EX(pusha), EX(popa), EMPTY, EMPTY,
   /* 0x64 */	EMPTY, EMPTY, EX(operand_size), EMPTY,
   /* 0x68 */	IDEX(push_SI, push), IDEX(I_E2G, imul3), IDEXW(push_SI, push, 1), IDEX(SI_E2G, imul3),
   /* 0x6c */	EMPTY, EMPTY, EMPTY, EMPTY,
