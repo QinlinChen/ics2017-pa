@@ -5,8 +5,7 @@
 #define DIFF_TEST
 
 /* You will define this macro in PA2 */
-//#define HAS_IOE
-volatile static int dummy;
+#define HAS_IOE
 
 #include "debug.h"
 #include "macro.h"
