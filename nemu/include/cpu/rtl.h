@@ -171,7 +171,7 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   *dest = (*src1 != 0 ? 1 : 0);
 }
 
-static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
+inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
   *dest = (*src1 >> (width * 8 - 1)) & 0x1;
 }
