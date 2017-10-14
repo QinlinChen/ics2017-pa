@@ -151,47 +151,47 @@ void difftest_step(uint32_t eip) {
   // Set `diff` as `true` if they are not the same.
   if (r.eax != cpu.eax) {
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.eax = 0x%x\tr.eax = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.eax = 0x%x\tr.eax = 0x%x)\n",
            eip, cpu.eax, r.eax);     
   }
   if (r.ecx != cpu.ecx){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.ecx = 0x%x\tr.ecx = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.ecx = 0x%x\tr.ecx = 0x%x)\n",
            eip, cpu.ecx, r.ecx);     
   }
   if (r.edx != cpu.edx){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.edx = 0x%x\tr.edx = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.edx = 0x%x\tr.edx = 0x%x)\n",
            eip, cpu.edx, r.edx);
   }
   if (r.ebx != cpu.ebx){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.ebx = 0x%x\tr.ebx = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.ebx = 0x%x\tr.ebx = 0x%x)\n",
            eip, cpu.ebx, r.ebx);
   }
   if (r.esp != cpu.esp){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.esp = 0x%x\tr.esp = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.esp = 0x%x\tr.esp = 0x%x)\n",
            eip, cpu.esp, r.esp);
   }
   if (r.ebp != cpu.ebp){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.ebp = 0x%x\tr.ebp = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.ebp = 0x%x\tr.ebp = 0x%x)\n",
            eip, cpu.ebp, r.ebp);
   }
   if (r.esi != cpu.esi){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.esi = 0x%x\tr.esi = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.esi = 0x%x\tr.esi = 0x%x)\n",
            eip, cpu.esi, r.esi);
   }
   if (r.edi != cpu.edi){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.edi = 0x%x\tr.edi = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.edi = 0x%x\tr.edi = 0x%x)\n",
            eip, cpu.edi, r.edi);
   }
   if (r.eip != cpu.eip){
     diff = true;
-    printf("Detect difference at eip = 0x%x:\tcpu.eip = 0x%x\tr.eip = 0x%x)\n",
+    Log("Detect difference at eip = 0x%x:\tcpu.eip = 0x%x\tr.eip = 0x%x)\n",
            eip, cpu.eip, r.eip);
   }
     
