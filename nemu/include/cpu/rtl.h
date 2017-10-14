@@ -87,7 +87,7 @@ static inline void rtl_sr_w(int r, const rtlreg_t* src1) {
   reg_w(r) = *src1;
 }
 
-static  void rtl_sr_l(int r, const rtlreg_t* src1) {
+static inline void rtl_sr_l(int r, const rtlreg_t* src1) {
   reg_l(r) = *src1;
 }
 
@@ -179,7 +179,7 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 /*
  * Attention: commands below use temporary register t3 
  */
-static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
+static  void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   t3 = ((*result << (4 - width) * 8) == 0);
   rtl_set_ZF(&t3);
