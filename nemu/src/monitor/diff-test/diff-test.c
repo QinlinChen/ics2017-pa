@@ -149,7 +149,7 @@ void difftest_step(uint32_t eip) {
 
   // Check the registers state with QEMU.
   // Set `diff` as `true` if they are not the same.
-  if (r.eax == cpu.eax) {
+  if (r.eax != cpu.eax) {
     diff = true;
     Log("Detect difference at eip = 0x%x:\tcpu.eax = 0x%x\tr.eax = 0x%x)",
            eip, cpu.eax, r.eax);     
