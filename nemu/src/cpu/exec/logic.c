@@ -71,6 +71,23 @@ make_EHelper(shr) {
   print_asm_template2(shr);
 }
 
+make_EHelper(rol) {
+  int i;
+  rtl_mv(&t1, &id_dest->val);
+  for (i = 0; i < id_src->val; ++i) {
+    rtl_msb(&t0, &t1, id_dest->width);
+    rtl_shli(&t1, &t1, 1);
+    rtl_or(&t1, &t1, &t0);
+  }
+  operand_write(id_dest, &t1);
+  rtl_set_CF(&t0);
+  rtl_msb(&t1, &t1, id_dest->width);
+  rtl_xor(&t0, &t1, &t0);
+  rtl_set_OF(&t0);
+  
+  print_asm_template2(rol);
+}
+
 make_EHelper(setcc) {
   uint8_t subcode = decoding.opcode & 0xf;
   rtl_setcc(&t2, subcode);
