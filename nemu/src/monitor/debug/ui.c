@@ -68,7 +68,7 @@ static int cmd_info(char *args) {
 				printf("%s\t0x%08x\t%10d\n", regsl[i], reg_l(i), reg_l(i));
 			printf("%s\t0x%08x\t%10d\n", "eip", cpu.eip, cpu.eip);
 			printf("[OF IF SF ZF CF] = [%d %d %d %d %d]\n", 
-			       cpu.eflags.OF, cpu.eflags.IF, cpu.eflags.SF, cpu.eflags.ZF, cpu.eflags.CF);
+			       cpu.OF, cpu.IF, cpu.SF, cpu.ZF, cpu.CF);
 			break;
 		case 'w':
 			print_all_wp();
