@@ -53,8 +53,8 @@ typedef struct {
   uint16_t CS;
   
   struct {
-    uint32_t base;
     uint16_t limit;
+    uint32_t base;
   } idtr;
   
 } CPU_state;
