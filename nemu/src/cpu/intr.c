@@ -8,7 +8,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   if (NO > cpu.idtr.limit)
     assert(0);
   rtl_push(&cpu.eflags);
-  rtl_push(&cpu.CS);
+  rtl_push(&cpu.cs);
   rtl_push(&ret_addr);
   
   vaddr_t idt_addr = cpu.idtr.base + NO * 8;

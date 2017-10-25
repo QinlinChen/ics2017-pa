@@ -50,7 +50,7 @@ typedef struct {
     uint32_t eflags;
   };  
   
-  rtlreg_t CS;
+  rtlreg_t cs;
   
   struct {
     uint16_t limit;
