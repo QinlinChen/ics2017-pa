@@ -7,7 +7,7 @@
 
 enum { OP_TYPE_REG, OP_TYPE_MEM, OP_TYPE_IMM };
 
-#define OP_STR_SIZE 40
+#define OP_STR_SIZE 400
 
 typedef struct {
   uint32_t type;
