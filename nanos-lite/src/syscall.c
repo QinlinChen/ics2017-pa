@@ -3,7 +3,6 @@
 
 static inline _RegSet* sys_none(_RegSet *r) {
   SYSCALL_ARG1(r) = 1;
-  printf("%x\n", r->eip);
   return NULL;
 }
 
