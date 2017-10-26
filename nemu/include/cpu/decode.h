@@ -31,8 +31,8 @@ typedef struct {
   vaddr_t jmp_eip;
   Operand src, dest, src2;
 #ifdef DEBUG
-  char assembly[800];
-  char asm_buf[1280];
+  char assembly[80];
+  char asm_buf[128];
   char *p;
 #endif
 } DecodeInfo;
