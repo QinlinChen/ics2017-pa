@@ -7,7 +7,6 @@ static inline _RegSet* sys_none(_RegSet *r) {
 }
 
 static inline _RegSet* sys_exit(_RegSet *r) {
-  assert(0);
   _halt(SYSCALL_ARG2(r));
   return NULL;
 }

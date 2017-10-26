@@ -37,6 +37,7 @@ make_EHelper(pusha) {
 
 // 32bit only
 make_EHelper(popa) {
+  assert(0);
   rtl_pop(&reg_l(R_EDI));
   rtl_pop(&reg_l(R_ESI));
   rtl_pop(&reg_l(R_EBP));
