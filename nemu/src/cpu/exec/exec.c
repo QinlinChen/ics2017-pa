@@ -229,7 +229,7 @@ void exec_wrapper(bool print_flag) {
 
   decoding.seq_eip = cpu.eip;
   exec_real(&decoding.seq_eip);
-/*
+
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - cpu.eip;
   sprintf(decoding.p, "%*.s", 50 - (12 + 3 * instr_len), "");
@@ -239,7 +239,7 @@ void exec_wrapper(bool print_flag) {
     puts(decoding.asm_buf);
   }
 #endif
-*/
+
 
 #ifdef DIFF_TEST
   uint32_t eip = cpu.eip;
