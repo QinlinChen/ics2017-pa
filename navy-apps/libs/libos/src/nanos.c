@@ -43,10 +43,9 @@ void *_sbrk(intptr_t increment){
   intptr_t old_program_break = program_break;
   intptr_t addr = program_break + increment;
   
-  if(_syscall_(SYS_brk, addr, 0, 0) != 0) {
-    assert(0);
+  if(_syscall_(SYS_brk, addr, 0, 0) != 0) 
     return (void *)-1;
-  }
+    assert(0);
   program_break = addr;
   return (void *)old_program_break;
 }
