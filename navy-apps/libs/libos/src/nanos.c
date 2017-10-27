@@ -34,18 +34,18 @@ int _write(int fd, void *buf, size_t count){
 #include <string.h>
 
 extern char end;
+intptr_t program_break = (intptr_t)&end;
 
 void *_sbrk(intptr_t increment){
-  char buf[100];
-  sprintf(buf, "%x\n", &end);
-  write(1, buf, strlen(buf));
-  //void *old_program_break = _heap.end;
-  //intptr_t addr = _end + increment;
+  //char buf[100];
+  //sprintf(buf, "%x\n", &end);
+  //write(1, buf, strlen(buf));
+  intptr_t old_program_break = program_break;
+  intptr_t addr = program_break + increment;
   
-  //if(_syscall_(SYS_brk, addr, 0, 0) != 0) 
-    //return (void *)-1;
-  //return old_program_break;
-  return (void *) -1; 
+  if(_syscall_(SYS_brk, addr, 0, 0) != 0) 
+    return (void *)-1;
+  return (void *)old_program_break;
 }
 
 int _read(int fd, void *buf, size_t count) {
