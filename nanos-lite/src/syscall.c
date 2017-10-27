@@ -18,9 +18,9 @@ static inline _RegSet* sys_write(_RegSet *r) {
   if (fd != 1 && fd != 2)
     TODO();
   int i;
-  for (i = 1; i <= count; ++i)
+  for (i = 0; i < count; ++i)
     _putc(buf[i]);
-  SYSCALL_ARG1(r) = i;
+  SYSCALL_ARG1(r) = i + 1;
   return NULL;
 }
 
