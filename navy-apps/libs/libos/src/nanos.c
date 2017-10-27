@@ -33,7 +33,7 @@ int _write(int fd, void *buf, size_t count){
 #include <stdlib.h>
 #include <string.h>
 
-extern intptr_t end;
+extern char end;
 
 void *_sbrk(intptr_t increment){
   char buf[100];
