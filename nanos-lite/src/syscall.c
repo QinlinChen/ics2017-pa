@@ -12,9 +12,9 @@ static inline _RegSet* sys_exit(_RegSet *r) {
 }
 
 static inline _RegSet* sys_write(_RegSet *r) {
-  int fd = (int)SYSCALL_ARG1(r);
-  const char *buf = (const char *)SYSCALL_ARG2(r);
-  size_t count = (size_t)SYSCALL_ARG3(r);
+  int fd = (int)SYSCALL_ARG2(r);
+  const char *buf = (const char *)SYSCALL_ARG3(r);
+  size_t count = (size_t)SYSCALL_ARG4(r);
   if (fd != 1 && fd != 2)
     TODO();
   int i;
