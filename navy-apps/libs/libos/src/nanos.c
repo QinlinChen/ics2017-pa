@@ -22,24 +22,17 @@ void _exit(int status) {
 }
 
 int _open(const char *path, int flags, mode_t mode) {
-  _exit(SYS_open);
+  return _syscall_(SYS_open, (uintptr_t)path, (uintptr_t)flags, (uintptr_t)mode);
 }
 
 int _write(int fd, void *buf, size_t count){
   return _syscall_(SYS_write, (uintptr_t)fd, (uintptr_t)buf, (uintptr_t)count);
 }
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-
 extern char end;
 intptr_t program_break = (intptr_t)&end;
 
 void *_sbrk(intptr_t increment){
-  // char buf[100];
-  // sprintf(buf, "%x\n", &end);
-  // write(1, buf, strlen(buf));
   intptr_t old_program_break = program_break;
   intptr_t addr = program_break + increment;
   
@@ -50,15 +43,15 @@ void *_sbrk(intptr_t increment){
 }
 
 int _read(int fd, void *buf, size_t count) {
-  _exit(SYS_read);
+  return _syscall_(SYS_read, (uintptr_t)fd, (uintptr_t)buf, (uintptr_t)count);
 }
 
 int _close(int fd) {
-  _exit(SYS_close);
+  return _syscall_(SYS_close, (uintptr_t)fd, 0, 0);
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
-  _exit(SYS_lseek);
+  return _syscall_(SYS_lseek, (uintptr_t)fd, (uintptr_t)offset, (uintptr_t)whence);
 }
 
 // The code below is not used by Nanos-lite.
