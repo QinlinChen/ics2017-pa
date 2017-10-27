@@ -100,4 +100,7 @@ int fs_close(int fd) {
   return 0;
 }
 
+size_t fs_filesz(int fd) {
+  return file_table[fd].size;
+}
 
