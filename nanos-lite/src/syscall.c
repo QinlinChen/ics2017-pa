@@ -26,6 +26,7 @@ static inline _RegSet* sys_write(_RegSet *r) {
 }
 
 static inline _RegSet* sys_brk(_RegSet *r) {
+  printf("%x\n", _heap.end);
   _heap.end = (void *)SYSCALL_ARG2(r);
   SYSCALL_ARG1(r) = 0;
   return NULL;
