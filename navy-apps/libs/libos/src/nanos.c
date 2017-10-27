@@ -29,11 +29,15 @@ int _write(int fd, void *buf, size_t count){
   return _syscall_(SYS_write, (uintptr_t)fd, (uintptr_t)buf, (uintptr_t)count);
 }
 
-extern end;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern intptr_t _end;
 
 void *_sbrk(intptr_t increment){
   char buf[100];
-  sprintf(buf, "%x\n", end);
+  sprintf(buf, "%x\n", &_end);
   write(1, buf, strlen(buf));
   //void *old_program_break = _heap.end;
   //intptr_t addr = _end + increment;
