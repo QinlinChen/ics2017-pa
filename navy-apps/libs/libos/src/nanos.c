@@ -29,8 +29,19 @@ int _write(int fd, void *buf, size_t count){
   return _syscall_(SYS_write, (uintptr_t)fd, (uintptr_t)buf, (uintptr_t)count);
 }
 
+extern end;
+
 void *_sbrk(intptr_t increment){
-  return (void *)_syscall_(SYS_brk, (uintptr_t)increment, 0, 0);
+  char buf[100];
+  sprintf(buf, "%x\n", end);
+  write(1, buf, strlen(buf));
+  //void *old_program_break = _heap.end;
+  //intptr_t addr = _end + increment;
+  
+  //if(_syscall_(SYS_brk, addr, 0, 0) != 0) 
+    //return (void *)-1;
+  //return old_program_break;
+  return (void *) -1; 
 }
 
 int _read(int fd, void *buf, size_t count) {
