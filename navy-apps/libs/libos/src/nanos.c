@@ -33,11 +33,11 @@ int _write(int fd, void *buf, size_t count){
 #include <stdlib.h>
 #include <string.h>
 
-extern intptr_t _end;
+extern intptr_t end;
 
 void *_sbrk(intptr_t increment){
   char buf[100];
-  sprintf(buf, "%x\n", &_end);
+  sprintf(buf, "%x\n", &end);
   write(1, buf, strlen(buf));
   //void *old_program_break = _heap.end;
   //intptr_t addr = _end + increment;
