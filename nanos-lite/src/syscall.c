@@ -20,7 +20,7 @@ static inline _RegSet* sys_write(_RegSet *r) {
   int i;
   for (i = 0; i < count; ++i)
     _putc(buf[i]);
-  SYSCALL_ARG1(r) = i;
+  SYSCALL_ARG1(r) = i + 1;
   return NULL;
 }
 
