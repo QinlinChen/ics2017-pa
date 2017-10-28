@@ -24,7 +24,7 @@ void fb_write(const void *buf, off_t offset, size_t len) {
   //y = offset / _screen.width;
   //x = offset % _screen.width;  
   //_draw_rect((const uint32_t *)buf, x, y, len, 1);
-  memcpy(fb + offset / 4, buf, len);
+  memcpy((char *)fb + offset, buf, len);
 }
 
 void init_device() {
