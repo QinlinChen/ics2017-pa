@@ -66,8 +66,8 @@ make_EHelper(inc) {
   rtl_update_ZFSF(&t2, id_dest->width);
 
   // CF = (result < dest)
-  rtl_sltu(&t0, &t2, &id_dest->val);
-  rtl_set_CF(&t0);
+  // rtl_sltu(&t0, &t2, &id_dest->val);
+  // rtl_set_CF(&t0);
 
   // OF = (msb(dest) == msb(src) && msb(dest) != msb(result))
   rtl_xor(&t0, &id_dest->val, &id_src->val);
@@ -94,8 +94,8 @@ make_EHelper(dec) {
   rtl_set_OF(&t1);
   
   // CF = (id_dest < result)
-  rtl_sltu(&t1, &id_dest->val, &t0);
-  rtl_set_CF(&t1);
+  // rtl_sltu(&t1, &id_dest->val, &t0);
+  // rtl_set_CF(&t1);
 
   print_asm_template1(dec);
 }
