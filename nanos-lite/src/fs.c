@@ -58,9 +58,9 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
   if (fd_open_offset + len > fd_size)
     len = fd_size - fd_open_offset;
   offset = file_table[fd].disk_offset + fd_open_offset;
-  //if (fd == FD_DISPINFO)
-    //dispinfo_read(buf, offset, len);
-  //else
+  if (fd == FD_DISPINFO)
+    dispinfo_read(buf, offset, len);
+  else
     ramdisk_read(buf, offset, len);
   file_table[fd].open_offset += len;
   return len;
