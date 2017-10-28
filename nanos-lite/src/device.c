@@ -21,9 +21,11 @@ void dispinfo_read(void *buf, off_t offset, size_t len) {
 //extern uint32_t* const fb;
 void fb_write(const void *buf, off_t offset, size_t len) {
   int x, y;
+  assert(offset % 4 == 0);
+  offset /= 4;
   y = offset / _screen.width;
   x = offset % _screen.width;  
-  _draw_rect((const uint32_t *)buf, x, y, len * sizeof(uint32_t), 1);
+  _draw_rect((const uint32_t *)buf, x, y, len / sizeof(uint32_t), 1);
   //memcpy((char *)fb + offset, buf, len);
 }
 
