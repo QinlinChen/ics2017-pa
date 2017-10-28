@@ -89,9 +89,9 @@ ssize_t fs_write(int fd, const void *buf, size_t len) {
       if (fd_open_offset + len > fd_size)
         len = fd_size - fd_open_offset;
       offset = file_table[fd].disk_offset + fd_open_offset;
-      //if (fd == FD_FB) 
-        //fb_write(buf, offset, len);
-      //else
+      if (fd == FD_FB) 
+        fb_write(buf, offset, len);
+      else
         ramdisk_write(buf, offset, len);
       file_table[fd].open_offset += len;
       return len;
