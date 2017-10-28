@@ -12,7 +12,7 @@ size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   bool down = false;
   if (key == _KEY_NONE)
-    sprintf((char *)buf, "t %lu\n", _uptime());
+    sprintf((char *)buf, "t %u\n", _uptime());
   else {
     if (key & 0x8000) {
       key ^= 0x8000;
