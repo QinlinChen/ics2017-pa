@@ -306,6 +306,7 @@ make_DHelper(out_a2dx) {
 void operand_write(Operand *op, rtlreg_t* src) {
   if (op->type == OP_TYPE_REG) { rtl_sr(op->reg, op->width, src); }
   else if (op->type == OP_TYPE_MEM) { rtl_sm(&op->addr, op->width, src); }
+  else if (op->type == OP_TYPE_CREG) { rtl_scr(op->reg, src); }
   else { assert(0); }
 }
 
@@ -313,4 +314,15 @@ make_DHelper(r2a) {
   decode_op_a(eip, id_dest, true);
   decode_op_r(eip, id_src, true);
 }
+
+// cr0, cr3 <- r
+make_DHelper(r2cr) {
+  read_cr_r(eip, id_dest, false, id_src, true);
+}
+
+// r <- cr0, cr3
+make_DHelper(cr2r) {
+  read_cr_r(eip, id_src, true, id_dest, false);
+}
+
 

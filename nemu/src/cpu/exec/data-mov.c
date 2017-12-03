@@ -107,3 +107,4 @@ make_EHelper(xchg) {
   operand_write(id_src, &t0);
   print_asm_template2(xchg);
 }
+
