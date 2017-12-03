@@ -21,7 +21,15 @@ int mm_brk(uint32_t new_brk) {
     current->cur_brk = current->max_brk = new_brk;
   else {
     if (new_brk > current->max_brk) {
-      TODO();
+      void *va_begin = (void *)((current->max_brk - 1) & ~0xfff) + 1;
+      void *va_end = (void *)((new_brk - 1) & ~0xfff);
+      void *va;
+      for (va = va_begin; va <= va_end; va += PGSIZE) {
+      //  PDE *pde = (PDE *)current->as.ptr + PDX(va);
+      //  PTE *pte = (PTE *)PTE_ADDR(*pde) + PTX(va);
+      //  if ((*pde & PTE_P) != 1 || (*pte & PTE_P) != 1)
+        _map(&current->as, va, new_page());
+      }
       current->max_brk = new_brk;
     }
     current->cur_brk = new_brk;
