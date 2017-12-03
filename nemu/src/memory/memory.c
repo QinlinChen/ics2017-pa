@@ -51,7 +51,7 @@ static paddr_t page_translate(vaddr_t addr) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  if ((addr & ~0xfff) != ((addr + len) & ~0xfff)) {
+  if ((addr & ~0xfff) != ((addr + len - 1) & ~0xfff)) {
     printf("addr: %x, len: %d", addr, len);
     assert(0);
   }   
@@ -60,7 +60,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  if ((addr & ~0xfff) != ((addr + len) & ~0xfff)) {
+  if ((addr & ~0xfff) != ((addr + len - 1) & ~0xfff)) {
     printf("addr: %x, len: %d", addr, len);
     assert(0);
   }  
