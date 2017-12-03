@@ -17,7 +17,8 @@ uintptr_t loader(_Protect *as, const char *filename) {
   
   for (i = 0, va = DEFAULT_ENTRY; i < pages; ++i, va += PGSIZE) {
     pa = new_page();
-    fs_read(fd, pa, PGSIZE);
+    printf("pa: %x, va: %x", pa, va);
+    printf(", read: %d\n", fs_read(fd, pa, PGSIZE));
     _map(as, va, pa);
   }
 
