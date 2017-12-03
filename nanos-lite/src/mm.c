@@ -21,7 +21,7 @@ int mm_brk(uint32_t new_brk) {
     current->cur_brk = current->max_brk = new_brk;
   else {
     if (new_brk > current->max_brk) {
-      void *va_begin = (void *)((current->max_brk - 1) & ~0xfff) + PGSIZE;
+      void *va_begin = (void *)((current->max_brk - 1) & ~0xfff);
       void *va_end = (void *)((new_brk - 1) & ~0xfff);
       void *va;
       for (va = va_begin; va <= va_end; va += PGSIZE) {
