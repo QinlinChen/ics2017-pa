@@ -49,7 +49,7 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 static paddr_t page_translate(vaddr_t addr) {
   if (!cpu.PG)
     return (paddr_t)addr;
-    
+  printf("hit me!\n");  
   uint32_t PDE, PTE;
   PDE = paddr_read(cpu.cr3 + 4 * PDX(addr), 4);
   assert((PDE & PTE_P) == 1);
