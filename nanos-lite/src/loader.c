@@ -16,9 +16,10 @@ uintptr_t loader(_Protect *as, const char *filename) {
   
   pa_begin = (uintptr_t)fs_begin(fd) & ~0xfff;
   pa_end = ((uintptr_t)fs_end(fd) - 1) & ~0xfff;
-  for (pa = pa_begin, va = (uintptr_t)DEFAULT_ENTRY; pa <= pa_end; pa += PGSIZE, va += PGSIZE)
+  for (pa = pa_begin, va = (uintptr_t)DEFAULT_ENTRY; pa <= pa_end; pa += PGSIZE, va += PGSIZE) {
+    printf("va: %x, pa: %x\n", va, pa);
     _map(as, (void *)va, (void *)pa);
-  
+  }
   fs_close(fd);
   return (uintptr_t)DEFAULT_ENTRY;
 }
