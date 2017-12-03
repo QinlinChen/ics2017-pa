@@ -67,14 +67,14 @@ void _switch(_Protect *p) {
 
 void _map(_Protect *p, void *va, void *pa) {
   PDE *pde = ((PDE *)p->ptr) + PDX(va);
-  PTE *pt;
+  PTE *ptab;
   if ((*pde & PTE_P) == 0) {
-    pt = (PTE *)(palloc_f());
-    *pde = ((uint32_t)pt & ~0xfff) | PTE_P;   
+    ptab = (PTE *)(palloc_f());
+    *pde = ((uint32_t)ptab & ~0xfff) | PTE_P;   
   }
   else 
-    pt = (PTE *)PTE_ADDR(*pde);
-  pt[PTX(va)] = ((uint32_t)pa & ~0xfff) | PTE_P;
+    ptab = (PTE *)PTE_ADDR(*pde);
+  ptab[PTX(va)] = ((uint32_t)pa & ~0xfff) | PTE_P;
 }
 
 void _unmap(_Protect *p, void *va) {

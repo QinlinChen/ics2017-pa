@@ -11,8 +11,7 @@ int fs_close(int fd);
 
 uintptr_t loader(_Protect *as, const char *filename) {
   int fd = fs_open(filename, 0, 0);
-  int pages = fs_filesz(fd) / PGSIZE + 1;
-  int i;
+  int i, pages = fs_filesz(fd) / PGSIZE + 1;
   void *pa, *va;
   
   for (i = 0, va = DEFAULT_ENTRY; i < pages; ++i, va += PGSIZE) {
