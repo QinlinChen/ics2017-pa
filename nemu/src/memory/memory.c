@@ -29,10 +29,20 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
     mmio_write(addr, len, data, map_NO);
 }
 
+static paddr_t page_translate(vaddr_t addr) {
+  return addr;
+}
+
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  return paddr_read(addr, len);
+  if ((addr & ~0xfff) != ((addr + len) & ~0xfff))
+    assert(0);
+  else
+    return paddr_read(page_translate(addr), len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  paddr_write(addr, len, data);
+  if ((addr & ~0xfff) != ((addr + len) & ~0xfff))
+    assert(0);
+  else
+    return paddr_write(page_translate(addr), len, data);
 }
