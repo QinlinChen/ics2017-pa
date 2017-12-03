@@ -123,10 +123,3 @@ size_t fs_filesz(int fd) {
   return file_table[fd].size;
 }
 
-off_t fs_begin(int fd) {
-  return file_table[fd].disk_offset;
-}
-
-off_t fs_end(int fd) {
-  return file_table[fd].disk_offset + file_table[fd].size;
-}
