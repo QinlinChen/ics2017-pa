@@ -113,16 +113,16 @@ static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
 
 static inline void rtl_lcr(rtlreg_t* dest, int index) {
   switch (index) {
-    case 0: *dest = cpu.cr0; return;
-    case 3: *dest = cpu.cr3; return;
+    case 0: *dest = cpu.cr0; printf("rlt_lcr: cr0 = %x\n", cpu.cr0); return;
+    case 3: *dest = cpu.cr3; printf("rlt_lcr: cr3 = %x\n", cpu.cr3); return;
     default: assert(0);
   }
 }
 
 static inline void rtl_scr(int index, const rtlreg_t* src) {
   switch (index) {
-    case 0: cpu.cr0 = *src; return;
-    case 3: cpu.cr3 = *src; return;
+    case 0: cpu.cr0 = *src; printf("rlt_scr: cr0 = %x\n", cpu.cr0); return;
+    case 3: cpu.cr3 = *src; printf("rlt_scr: cr3 = %x\n", cpu.cr3); return;
     default: assert(0);
   }
 }
