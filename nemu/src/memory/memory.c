@@ -23,6 +23,7 @@
 
 // Address in page table or page directory entry
 #define PTE_ADDR(pte)   ((uint32_t)(pte) & ~0xfff)
+#define PG_BEGIN(va)   ((va) & ~0xfff)
 
 uint8_t pmem[PMEM_SIZE];
 
@@ -46,6 +47,7 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
     mmio_write(addr, len, data, map_NO);
 }
 
+// Access bit and dirty bit haven't been implemented!
 static paddr_t page_translate(vaddr_t addr) {
   if (!cpu.PG)
     return (paddr_t)addr;
@@ -61,17 +63,24 @@ static paddr_t page_translate(vaddr_t addr) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  if ((addr & ~0xfff) != ((addr + len - 1) & ~0xfff)) {
-    assert(0);
+  vaddr_t next_page_begin = PG_BEGIN(addr + len - 1);
+  if (PG_BEGIN(addr) != next_page_begin) {
+    int fst_half_len = next_page_begin - addr;
+    uint32_t fst_val = paddr_read(page_translate(addr), fst_half_len);
+    uint32_t snd_val = paddr_read(page_translate(next_page_begin), len - fst_half_len);
+    return ((snd_val << (fst_half_len << 3)) | fst_val);
   }   
   else 
     return paddr_read(page_translate(addr), len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  if ((addr & ~0xfff) != ((addr + len - 1) & ~0xfff)) {
-    assert(0);
-  }  
+  vaddr_t next_page_begin = PG_BEGIN(addr + len - 1);
+  if (PG_BEGIN(addr) != next_page_begin) {
+    int fst_half_len = next_page_begin - addr;
+    paddr_write(page_translate(addr), fst_half_len, data);
+    paddr_write(page_translate(next_page_begin), len - fst_half_len, (data >> (fst_half_len << 3)));
+  } 
   else
-    return paddr_write(page_translate(addr), len, data);
+    paddr_write(page_translate(addr), len, data);
 }
