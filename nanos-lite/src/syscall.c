@@ -60,7 +60,7 @@ static inline _RegSet* sys_close(_RegSet *r) {
 static inline _RegSet* sys_brk(_RegSet *r) {
   // printf("%x\n", _heap.end);
   uint32_t new_brk = SYSCALL_ARG2(r);
-  printf("sys_brk: %x\n", new_brk);
+  printf("_heap.end: %x, sys_brk: %x\n", _heap.end, new_brk);
   SYSCALL_ARG1(r) = mm_brk(new_brk);
   return NULL;
 }
