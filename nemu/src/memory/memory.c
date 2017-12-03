@@ -64,8 +64,12 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   if ((addr & ~0xfff) != ((addr + len - 1) & ~0xfff)) {
     assert(0);
   }   
-  else
-    return paddr_read(page_translate(addr), len);
+  else {
+    paddr_t paddr = page_translate(addr);
+    printf("vaddr: %x, paddr: %x", addr, paddr);
+    return paddr_read(paddr, len);
+  }
+    
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
