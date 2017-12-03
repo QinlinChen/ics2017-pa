@@ -66,7 +66,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   }   
   else {
     paddr_t paddr = page_translate(addr);
-    printf("vaddr: %x, paddr: %x", addr, paddr);
+    printf("vaddr: %x, paddr: %x\n", addr, paddr);
     return paddr_read(paddr, len);
   }
     
