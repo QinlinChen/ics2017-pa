@@ -6,6 +6,7 @@ ssize_t fs_read(int fd, void *buf, size_t len);
 ssize_t fs_write(int fd, const void *buf, size_t len);
 off_t fs_lseek(int fd, off_t offset, int whence);
 int fs_close(int fd);
+int mm_brk(uint32_t new_brk);
 
 static inline _RegSet* sys_none(_RegSet *r) {
   SYSCALL_ARG1(r) = 1;
@@ -58,8 +59,8 @@ static inline _RegSet* sys_close(_RegSet *r) {
 
 static inline _RegSet* sys_brk(_RegSet *r) {
   // printf("%x\n", _heap.end);
-  _heap.end = (void *)SYSCALL_ARG2(r);
-  SYSCALL_ARG1(r) = 0;
+  uint32_t new_brk = SYSCALL_ARG2(r);
+  SYSCALL_ARG1(r) = mm_brk(new_brk);
   return NULL;
 }
 
