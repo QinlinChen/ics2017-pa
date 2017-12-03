@@ -49,7 +49,7 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 static paddr_t page_translate(vaddr_t addr) {
   if (!cpu.PG)
     return (paddr_t)addr;
-  printf("hit me!\n");  
+    
   uint32_t PDE, PTE;
   PDE = paddr_read(cpu.cr3 + 4 * PDX(addr), 4);
   assert((PDE & PTE_P) == 1);
@@ -64,12 +64,8 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   if ((addr & ~0xfff) != ((addr + len - 1) & ~0xfff)) {
     assert(0);
   }   
-  else {
-    paddr_t paddr = page_translate(addr);
-    printf("vaddr: %x, paddr: %x\n", addr, paddr);
-    return paddr_read(paddr, len);
-  }
-    
+  else 
+    return paddr_read(page_translate(addr), len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
