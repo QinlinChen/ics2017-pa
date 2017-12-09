@@ -20,6 +20,7 @@ size_t events_read(void *buf, size_t len) {
       key ^= 0x8000;
       down = true;
     }
+    // press KEY_F12 to switch game
     if (down && key == _KEY_F12)
       switch_game();
     sprintf((char *)buf, "k%c %s\n", (down ? 'd' : 'u'), keyname[key]);
