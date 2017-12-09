@@ -31,7 +31,7 @@ _RegSet* schedule(_RegSet *prev) {
   if (current)
     current->tf = prev; 
   static int count_pcb0 = 0;
-  if (count_pcb0 >= 1000 && current == &pcb[0]) {
+  if (count_pcb0 >= 10000 && current == &pcb[0]) {
     current = &pcb[1];
     count_pcb0 = 0;
   }
