@@ -33,7 +33,7 @@ int main() {
 
   load_prog("/bin/pal");
   load_prog("/bin/hello");
-  load_prog("/bin/vediotest");
+  load_prog("/bin/videotest");
   
   _trap();
   
