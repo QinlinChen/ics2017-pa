@@ -27,8 +27,7 @@ void load_prog(const char *filename) {
 }
 
 _RegSet* schedule(_RegSet *prev) {
-  printf("Hello from schedule\n");
-  
+  // printf("Hello from schedule\n");
   if (current)
     current->tf = prev; 
   current = &pcb[0];
