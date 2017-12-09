@@ -30,7 +30,7 @@ _RegSet* schedule(_RegSet *prev) {
   // printf("Hello from schedule\n");
   if (current)
     current->tf = prev;
-  /* 
+  /* for pa4.2
   static int count_pcb0 = 0;
   if (count_pcb0 >= 3000 && current == &pcb[0]) {
     current = &pcb[1];
