@@ -8,6 +8,8 @@ static const char *keyname[256] __attribute__((used)) = {
   _KEYS(NAME)
 };
 
+void switch_game();
+
 size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   bool down = false;
@@ -18,6 +20,8 @@ size_t events_read(void *buf, size_t len) {
       key ^= 0x8000;
       down = true;
     }
+    if (down && key == _KEY_F12)
+      switch_game();
     sprintf((char *)buf, "k%c %s\n", (down ? 'd' : 'u'), keyname[key]);
   } 
   return strlen((char *)buf);
