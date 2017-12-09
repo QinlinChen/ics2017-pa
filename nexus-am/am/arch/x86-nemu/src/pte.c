@@ -82,24 +82,24 @@ void _unmap(_Protect *p, void *va) {
 
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
   uint32_t *pstack = ustack.end;
-  *(--pstack) = 0;    // push envp
-  *(--pstack) = 0;    // push argv
-  *(--pstack) = 0;    // push argc
-  *(--pstack) = 0xffffffff;    // push ret_address for _start
+  *(--pstack) = 0;              // push envp
+  *(--pstack) = 0;              // push argv
+  *(--pstack) = 0;              // push argc
+  *(--pstack) = 0xffffffff;     // pad ret_address for _start
   
-  *(--pstack) = 2;    // push eflags
-  *(--pstack) = 8;    // push cs
+  *(--pstack) = 2;                // push eflags
+  *(--pstack) = 8;                // push cs
   *(--pstack) = (uint32_t)entry;  // push iret_addr
   
-  *(--pstack) = 0;    // push error_code
-  *(--pstack) = 0x81; // push irq
-  *(--pstack) = 0;    // push eax
-  *(--pstack) = 0;    // push ecx
-  *(--pstack) = 0;    // push edx
-  *(--pstack) = 0;    // push ebx
-  *(--pstack) = 0;    // push esp
-  *(--pstack) = 0;    // push ebp
-  *(--pstack) = 0;    // push esi
-  *(--pstack) = 0;    // push edi
+  *(--pstack) = 0;                    // push error_code
+  *(--pstack) = 0x81;                 // push irq
+  *(--pstack) = 0;                    // push eax
+  *(--pstack) = 0;                    // push ecx
+  *(--pstack) = 0;                    // push edx
+  *(--pstack) = 0;                    // push ebx
+  *(--pstack) = 0;                    // push esp
+  *(--pstack) = (uint32_t)ustack.end; // push ebp
+  *(--pstack) = 0;                    // push esi
+  *(--pstack) = 0;                    // push edi
   return (_RegSet *)pstack;
 }
