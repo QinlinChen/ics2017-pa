@@ -35,18 +35,15 @@ _RegSet* schedule(_RegSet *prev) {
   // printf("Hello from schedule\n");
   if (current)
     current->tf = prev;
-  /* for pa4.2
-  static int count_pcb0 = 0;
-  if (count_pcb0 >= 3000 && current == &pcb[0]) {
+  static int count_game = 0;
+  if (count_game >= 100 && current != &pcb[1]) {
     current = &pcb[1];
-    count_pcb0 = 0;
+    count_game = 0;
   }
   else {
-    current = &pcb[0];
-    count_pcb0++;
+    current = current_game;
+    count_game++;
   }
-  */
-  current = (current == &pcb[1] ? current_game : &pcb[1]);   
   _switch(&current->as); 
   return current->tf;
 }
