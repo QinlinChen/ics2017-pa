@@ -27,6 +27,15 @@ void load_prog(const char *filename) {
 }
 
 _RegSet* schedule(_RegSet *prev) {
+  if (prev == NULL)
+    printf("NULL\n");
   printf("Hello from schedule\n");
   return NULL;
+  //current->tf = prev;
+  
+  //current = &pcb[0];
+  
+  //_switch(current->as);
+  
+  //return current->tf;
 }
