@@ -27,7 +27,7 @@ void load_prog(const char *filename) {
 }
 
 _RegSet* schedule(_RegSet *prev) {
-  if (prev == NULL)
+  if (current == NULL)
     printf("NULL\n");
   printf("Hello from schedule\n");
   return NULL;
