@@ -27,15 +27,10 @@ void load_prog(const char *filename) {
 }
 
 _RegSet* schedule(_RegSet *prev) {
-  if (current == NULL)
-    printf("NULL\n");
   printf("Hello from schedule\n");
-  return NULL;
-  //current->tf = prev;
-  
-  //current = &pcb[0];
-  
-  //_switch(current->as);
-  
-  //return current->tf;
+  if (current)
+    current->tf = prev; 
+  current = &pcb[0];
+  _switch(&current->as);
+  return current->tf;
 }
