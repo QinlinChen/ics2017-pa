@@ -8,6 +8,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   if (NO > cpu.idtr.limit)
     assert(0);
   rtl_push(&cpu.eflags);
+  cpu.IF = 0;
   rtl_push(&cpu.cs);
   rtl_push(&ret_addr);
   
@@ -20,4 +21,5 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
+  cpu.INTR = true;
 }

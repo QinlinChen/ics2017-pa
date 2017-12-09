@@ -13,6 +13,8 @@ typedef struct {
 #define EX(ex)             EXW(ex, 0)
 #define EMPTY              EX(inv)
 
+#define TIMER_IRQ 32
+
 static inline void set_width(int width) {
   if (width == 0) {
     width = decoding.is_operand_size_16 ? 2 : 4;
@@ -221,6 +223,8 @@ static inline void update_eip(void) {
   cpu.eip = (decoding.is_jmp ? (decoding.is_jmp = 0, decoding.jmp_eip) : decoding.seq_eip);
 }
 
+void raise_intr(uint8_t NO, vaddr_t ret_addr);
+
 void exec_wrapper(bool print_flag) {
 #ifdef DEBUG
   decoding.p = decoding.asm_buf;
@@ -251,4 +255,10 @@ void exec_wrapper(bool print_flag) {
   void difftest_step(uint32_t);
   difftest_step(eip);
 #endif
+
+  if (cpu.INTR & cpu.IF) {
+    cpu.INTR = false;
+    raise_intr(TIMER_IRQ, cpu.eip);
+    update_eip();
+  }
 }

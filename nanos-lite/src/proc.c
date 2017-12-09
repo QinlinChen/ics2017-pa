@@ -29,7 +29,8 @@ void load_prog(const char *filename) {
 _RegSet* schedule(_RegSet *prev) {
   // printf("Hello from schedule\n");
   if (current)
-    current->tf = prev; 
+    current->tf = prev;
+  /* 
   static int count_pcb0 = 0;
   if (count_pcb0 >= 3000 && current == &pcb[0]) {
     current = &pcb[1];
@@ -38,7 +39,9 @@ _RegSet* schedule(_RegSet *prev) {
   else {
     current = &pcb[0];
     count_pcb0++;
-  }   
+  }
+  */
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);   
   _switch(&current->as); 
   return current->tf;
 }

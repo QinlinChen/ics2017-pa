@@ -87,7 +87,7 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
   *(--pstack) = 0;              // push argc
   *(--pstack) = 0xffffffff;     // pad ret_address for _start
   
-  *(--pstack) = 2;                // push eflags
+  *(--pstack) = 0x202;            // push eflags
   *(--pstack) = 8;                // push cs
   *(--pstack) = (uint32_t)entry;  // push iret_addr
   

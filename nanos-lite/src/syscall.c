@@ -7,7 +7,6 @@ ssize_t fs_write(int fd, const void *buf, size_t len);
 off_t fs_lseek(int fd, off_t offset, int whence);
 int fs_close(int fd);
 int mm_brk(uint32_t new_brk);
-_RegSet* schedule(_RegSet *prev);
 
 static inline _RegSet* sys_none(_RegSet *r) {
   SYSCALL_ARG1(r) = 1;
@@ -70,16 +69,16 @@ _RegSet* do_syscall(_RegSet *r) {
   a[0] = SYSCALL_ARG1(r);
 
   switch (a[0]) {
-    case SYS_none:  sys_none(r); break;
-    case SYS_open:  sys_open(r); break;
-    case SYS_read:  sys_read(r); break;
-    case SYS_write: sys_write(r); break;
-    case SYS_exit:  sys_exit(r); break;
-    case SYS_close: sys_close(r); break;
-    case SYS_lseek: sys_lseek(r); break;
-    case SYS_brk:   sys_brk(r); break;
+    case SYS_none:  return sys_none(r);
+    case SYS_open:  return sys_open(r);
+    case SYS_read:  return sys_read(r);
+    case SYS_write: return sys_write(r);
+    case SYS_exit:  return sys_exit(r);
+    case SYS_close: return sys_close(r);
+    case SYS_lseek: return sys_lseek(r);
+    case SYS_brk:   return sys_brk(r);
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
-  return schedule(r);
+  return NULL;
 }
