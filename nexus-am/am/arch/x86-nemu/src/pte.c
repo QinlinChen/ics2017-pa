@@ -101,6 +101,5 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
   *(--pstack) = (uint32_t)ustack.end; // push ebp
   *(--pstack) = 0;                    // push esi
   *(--pstack) = 0;                    // push edi
-  *(--pstack) = 0;                    // pad args for irq_handle
   return (_RegSet *)pstack;
 }
